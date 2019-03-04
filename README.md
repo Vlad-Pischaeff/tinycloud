@@ -8,8 +8,10 @@ Easy starting
 1. First, make sure that the following are installed:
    Python 3 (3.7.2 or better)
 2. Run 
+<pre><tt>
    pip install flask
    pip install flask_core
+</tt></pre>
 3. Create You own project directory structure
 <pre>
 <tt>
