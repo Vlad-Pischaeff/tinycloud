@@ -138,7 +138,7 @@ def fileUpload():
        os.mkdir(target)
     global curr_dir 
     curr_dir = target
-    file = request.args['file'] 
+    file = request.files['file'] 
     logger.info("welcome to upload - %s" % file)
     filename = secure_filename(file.filename)
     destination="/".join([target, filename])

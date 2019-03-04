@@ -6,6 +6,8 @@ import ModalRemoveItem from './ModalRemoveItem';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
+import Tooltip from '@material-ui/core/Tooltip';
 import { withStyles } from '@material-ui/core/styles';
 import Home from '@material-ui/icons/Home';
 import Undo from '@material-ui/icons/Undo';
@@ -80,7 +82,7 @@ class AppWindow extends Component {
 		return false;
 	}
 	
-	buttonDeleteDisabled(){
+	buttonDisabled(){
 		if (!this.isNotEmpty(this.state.filesChecked))
 			if (!this.isNotEmpty(this.state.dirChecked))
 				return true;
@@ -234,47 +236,53 @@ class AppWindow extends Component {
 		return (
 			<div className="AppWindow">
 				<h3>"App Window"</h3>
-
-				<Button size="small" variant="contained" color="primary" className={classes.button} 
+				<Tooltip title="Home">
+					<Fab size="small" variant="contained" color="primary" className={classes.button} 
 						onClick={this.getHomeList}>
-					HOME
-					<Home className={classes.rightIcon} />
-				</Button>
+						<Home />
+					</Fab>
+				</Tooltip >
 
-				<Button size="small" variant="contained" color="primary" className={classes.button} 
+				<Tooltip title="Back">
+					<Fab size="small" variant="contained" color="primary" className={classes.button} 
 						onClick={this.getBackList}>
-					BACK
-					<Undo className={classes.rightIcon} />
-				</Button>
+						<Undo />
+					</Fab>
+				</Tooltip >
 
-				<Button size="small" variant="contained" color="primary" className={classes.button} 
+				<Tooltip title="Create Directory">
+					<Fab size="small" variant="contained" color="primary" className={classes.button} 
 						onClick={this.openModalCreateDir}>
-					+DIR
-					<CreateNewFolder className={classes.rightIcon} />
-				</Button>
-
-				<Button size="small" variant="contained" color="primary" className={classes.button} 
-						onClick={this.openModalRemoveItem} 
-						disabled={this.buttonDeleteDisabled()} >
-					-DIR
-					<Delete className={classes.rightIcon} />
-				</Button>
-
-				<Button size="small" variant="contained" color="primary" className={classes.button}
-						component="label">
-					UPLOAD
-					<CloudUpload className={classes.rightIcon} />
-					<input 	type="file" multiple
-							style={{ display: "none" }}
-							onChange={(e)=>{this.uploadFile(e.currentTarget)}}/>
-				</Button>
+						<CreateNewFolder />
+					</Fab>
+				</Tooltip >
 				
-				<Button size="small" variant="contained" color="primary" className={classes.button}
-						component="label" onClick={this.downloadItem}>
-					DOWNLOAD
-					<CloudDownload className={classes.rightIcon} />
-				</Button>
+				<Tooltip title="Upload File">
+					<Fab size="small" variant="contained" color="primary" className={classes.button}
+						component="label">
+						<CloudUpload />
+						<input 	type="file" multiple
+								style={{ display: "none" }}
+								onChange={(e)=>{this.uploadFile(e.currentTarget)}}/>
+					</Fab>
+				</Tooltip >
+				
+				<Tooltip title="Download File">
+					<Fab size="small" variant="contained" color="primary" className={classes.button}
+						component="label" onClick={this.downloadItem}
+						disabled={this.buttonDisabled()} >
+						<CloudDownload />
+					</Fab>
+				</Tooltip >
 
+				<Tooltip title="Delete Item">
+					<Fab size="small" variant="contained" color="primary" className={classes.button} 
+						onClick={this.openModalRemoveItem} 
+						disabled={this.buttonDisabled()} >
+						<Delete />
+					</Fab>
+				</Tooltip >
+				
 				<ModalCreateDir openWindow={this.state.OpenModalCreateDir} 
 								closeWindow={this.closeModalCreateDir} 
 								callbackMkDir={this.setDirList}	/>
