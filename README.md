@@ -12,7 +12,7 @@ Easy starting
    pip install flask_core
 3. Create You own project directory structure
 
-<code>
+<tt>
    project--|
             |- public-|
             |         |-index.html
@@ -23,7 +23,7 @@ Easy starting
                       |               |-bundle.js
                       |- tinycloud.conf
                       |- tinycloud.py
-</code>
+</tt>
 4. Edit tinycloud.conf. Point You own cloud directory
 5. Change first string of tinycloud.py with Your own path to python.exe
 6. Launch tinycloud.py
