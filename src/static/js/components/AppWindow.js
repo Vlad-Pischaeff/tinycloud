@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import ItemList from './ItemList';
 import ModalCreateDir from './ModalCreateDir';
 import ModalRemoveItem from './ModalRemoveItem';
+import Grid from '@material-ui/core/Grid';
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+
 import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -45,6 +47,8 @@ class AppWindow extends Component {
 						ClearListItemsForDelete: false,
 						dirChecked: {},
 						filesChecked: {},
+						percent: "0%",
+						value: 0,
 						};
 		this.getBackList = this.getBackList.bind(this);
 
@@ -167,7 +171,7 @@ class AppWindow extends Component {
 		for (var i = 0; i < file.files.length; i++) {
 			data.set('file', file.files[i]);
 			this.chkFormData(data);
-			this.getPost(data);
+			this.getPostXHR(data);
 		}
 	}
 	
@@ -186,6 +190,36 @@ class AppWindow extends Component {
 			});	
 	}
 	
+	getPostXHR = (data) => {
+		var xhr = new XMLHttpRequest();
+		var status = false;
+		xhr.open("POST", "/upload", true);
+		xhr.onload = (e) => {
+			if (xhr.readyState === 4) {
+				if (xhr.status === 200) {
+					this.setState({percent: "0%", value: 0});
+					this.getDirList();
+					console.log("OK");
+					status = true;
+				} else {
+					console.error(xhr.statusText);
+				}
+			}
+		};
+		xhr.onerror = (e) => {
+			console.error(xhr.statusText);
+		};
+		xhr.upload.onprogress = (event) => {
+			var p = ~~((+event.loaded/+event.total)*100);
+			var str = p + "%";
+			this.setState({percent: str, value: p});
+//			console.log(percent+"%", event.loaded + ' / ' + event.total);
+		}
+//		console.log("1");
+		xhr.send(data);
+//		console.log("2");
+	}
+  
 	chkFormData = (data) => {
 		for (var [key, value] of data.entries()) { 
 			console.log("key=" , key, "value=", value);
@@ -234,8 +268,11 @@ class AppWindow extends Component {
 //	console.log("ItemList props =", this.props);
 
 		return (
-			<div className="AppWindow">
-				<h3>"App Window"</h3>
+
+			<Grid container direction="column">
+			<Grid container direction="row">
+			<div className="Header" >
+				<Grid item>
 				<Tooltip title="Home">
 					<Fab size="small" variant="contained" color="primary" className={classes.button} 
 						onClick={this.getHomeList}>
@@ -276,12 +313,23 @@ class AppWindow extends Component {
 				</Tooltip >
 
 				<Tooltip title="Delete Item">
-					<Fab size="small" variant="contained" color="primary" className={classes.button} 
+					<Fab size="small" variant="contained" color="secondary" className={classes.button} 
 						onClick={this.openModalRemoveItem} 
 						disabled={this.buttonDisabled()} >
 						<Delete />
 					</Fab>
 				</Tooltip >
+				</Grid>
+				
+				<Grid item>
+				<div class="progress mb-3" >
+					<div id="progress" class="progress-bar" role="progressbar" 
+						 style={{"width": this.state.percent}} 
+						 aria-valuenow={this.state.value} 
+						 aria-valuemin="0" 
+						 aria-valuemax="100"></div>
+				</div>
+				</Grid>
 				
 				<ModalCreateDir openWindow={this.state.OpenModalCreateDir} 
 								closeWindow={this.closeModalCreateDir} 
@@ -291,10 +339,19 @@ class AppWindow extends Component {
 								closeWindow={this.closeModalRemoveItem} 
 								callbackRemoveItem={this.rmDir}/>
 
-				<ItemList 		items={this.state.items} 
+			</div>
+			</Grid>
+			
+			<Grid item>
+				<div className="ItemWindow"  >
+					<ItemList 	items={this.state.items} 
 								callbackFromAppWindow={this.setDirList}
 								callbackFromAppWindowDeleteDir={this.setDelDir}	/>
-			</div>
+
+				</div>
+			</Grid>
+			
+			</Grid>
 		);
 	}
 }

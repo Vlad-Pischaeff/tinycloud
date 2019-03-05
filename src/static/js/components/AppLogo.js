@@ -4,7 +4,7 @@ class AppLogo extends Component {
     render() {
         return (
             <div className="AppLogo">
-                <h1>"Application Logo"</h1>
+                 <img src={require('../img/Logo2.png')} alt="tinyCLOUD" height="100%" width="100%"/>
             </div>
         );
     }

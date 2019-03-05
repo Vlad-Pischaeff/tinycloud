@@ -14,6 +14,8 @@ from flask_cors import CORS, cross_origin
 #cgitb.enable()
 #form = cgi.FieldStorage()
 #set_dir = form.getvalue('d')
+
+
 logging.basicConfig(level=logging.INFO)
 
 logger = logging.getLogger('HELLO WORLD')
@@ -132,7 +134,6 @@ def fileDownload():
 	
 @app.route('/upload', methods=['POST','GET'])
 def fileUpload():
-#    target=os.path.join(UPLOAD_FOLDER,'test_docs')
     target=os.getcwd()
     if not os.path.isdir(target):
        os.mkdir(target)
