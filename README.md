@@ -6,14 +6,15 @@ Easy starting
 <h3>Windows</h3>
 <p>
 
-1. First, make sure that the following are installed:
+<ul>
+   <li> First, make sure that the following are installed:
    Python 3 (3.7.2 or better)
-2. Run 
+<li> Run 
 <pre><tt>
    pip install flask
    pip install flask_core
 </tt></pre>
-3. Create You own project directory structure
+<li> Create You own project directory structure
 <pre>
 <tt>
    project--|
@@ -28,11 +29,12 @@ Easy starting
                       |- tinycloud.py
 </tt>
 </pre>
-4. Edit tinycloud.conf. Point You own cloud directory
-5. Change first string of tinycloud.py with Your own path to python.exe
-6. Launch tinycloud.py
-7. In browser connect to http://localhost:5000
-8. Enjoy!
+<li> Edit tinycloud.conf. Point You own cloud directory
+<li> Change first string of tinycloud.py with Your own path to python.exe
+<li> Launch tinycloud.py
+<li> In browser connect to http://localhost:5000
+<li> Enjoy!
+   </ul>
 
 <b>Linux.</b>
 
