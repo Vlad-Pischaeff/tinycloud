@@ -3,7 +3,8 @@ tiny web cloud application ReactJS &amp; Python based
 
 Easy starting
 
-<b>Windows</b>
+<h3>Windows</h3>
+<p>
 
 1. First, make sure that the following are installed:
    Python 3 (3.7.2 or better)
