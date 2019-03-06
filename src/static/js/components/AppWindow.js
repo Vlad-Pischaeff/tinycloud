@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ItemList from './ItemList';
 import ModalCreateDir from './ModalCreateDir';
 import ModalRemoveItem from './ModalRemoveItem';
+import ModalUploadFiles from './ModalUploadFiles';
 import Grid from '@material-ui/core/Grid';
 
 import PropTypes from 'prop-types';
@@ -44,17 +45,23 @@ class AppWindow extends Component {
 		this.state = { 	items: [],
 						OpenModalCreateDir: false,
 						OpenModalRemoveItem: false,
+						OpenModalUploadFiles: false,
 						ClearListItemsForDelete: false,
 						dirChecked: {},
 						filesChecked: {},
 						percent: "0%",
 						value: 0,
+						uploadState: {},
 						};
 		this.getBackList = this.getBackList.bind(this);
 
 		document.addEventListener('DOMContentLoaded', this.getDirList);
 	}
 
+	replaceSpace(str) {
+		return str.replace( /\s/g, "%20" );
+	}
+	
 	getDirList = () => {
   	$.get(window.location.href + 'ls', (data) => {
 			this.setState({items: data});
@@ -167,11 +174,12 @@ class AppWindow extends Component {
 	}*/
 	
 	uploadFile = (file) => {
+		this.setState({OpenModalUploadFiles: !this.state.OpenModalUploadFiles});
 		const data = new FormData();
 		for (var i = 0; i < file.files.length; i++) {
 			data.set('file', file.files[i]);
 			this.chkFormData(data);
-			this.getPostXHR(data);
+			this.getPostXHR(data, file.files[i]['name'] );
 		}
 	}
 	
@@ -190,7 +198,8 @@ class AppWindow extends Component {
 			});	
 	}
 	
-	getPostXHR = (data) => {
+	getPostXHR = (data, file) => {
+		var obj = this.state.uploadState;
 		var xhr = new XMLHttpRequest();
 		var status = false;
 		xhr.open("POST", "/upload", true);
@@ -198,8 +207,13 @@ class AppWindow extends Component {
 			if (xhr.readyState === 4) {
 				if (xhr.status === 200) {
 					this.setState({percent: "0%", value: 0});
+					delete this.state.uploadState[file];
+
+					if (!this.isNotEmpty(this.state.uploadState))
+						this.setState({OpenModalUploadFiles: false});
+
 					this.getDirList();
-					console.log("OK");
+					console.log("Uploaded file--", file);
 					status = true;
 				} else {
 					console.error(xhr.statusText);
@@ -212,12 +226,10 @@ class AppWindow extends Component {
 		xhr.upload.onprogress = (event) => {
 			var p = ~~((+event.loaded/+event.total)*100);
 			var str = p + "%";
-			this.setState({percent: str, value: p});
-//			console.log(percent+"%", event.loaded + ' / ' + event.total);
+			obj[file] = p;
+			this.setState({percent: str, value: p, uploadState: obj});
 		}
-//		console.log("1");
 		xhr.send(data);
-//		console.log("2");
 	}
   
 	chkFormData = (data) => {
@@ -321,23 +333,17 @@ class AppWindow extends Component {
 				</Tooltip >
 				</Grid>
 				
-				<Grid item>
-				<div class="progress mb-3" >
-					<div id="progress" class="progress-bar" role="progressbar" 
-						 style={{"width": this.state.percent}} 
-						 aria-valuenow={this.state.value} 
-						 aria-valuemin="0" 
-						 aria-valuemax="100"></div>
-				</div>
-				</Grid>
-				
 				<ModalCreateDir openWindow={this.state.OpenModalCreateDir} 
 								closeWindow={this.closeModalCreateDir} 
 								callbackMkDir={this.setDirList}	/>
 
 				<ModalRemoveItem openWindow={this.state.OpenModalRemoveItem}
-								closeWindow={this.closeModalRemoveItem} 
-								callbackRemoveItem={this.rmDir}/>
+								 closeWindow={this.closeModalRemoveItem} 
+								 callbackRemoveItem={this.rmDir}/>
+								
+				<ModalUploadFiles 	openWindow={this.state.OpenModalUploadFiles} 
+									state={this.state.uploadState}
+									/>
 
 			</div>
 			</Grid>
