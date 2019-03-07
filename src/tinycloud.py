@@ -123,7 +123,8 @@ def rmfile():
 def fileDownload():
     #For windows you need to use drive name [ex: F:/Example.pdf]
     source=os.getcwd()
-    data = request.get_data()
+    data = request.data.decode('utf8')
+    print("data-- %s" % request.data)
     data2 = json.loads(data)
     #data = request.form.to_dict()
     print("request-- %s" % data2['item'])
@@ -131,6 +132,7 @@ def fileDownload():
     path="/".join([source, filename])
     print("path for download %s" % path)
     return send_file(path, as_attachment=True, attachment_filename=filename)
+
 	
 @app.route('/upload', methods=['POST','GET'])
 def fileUpload():

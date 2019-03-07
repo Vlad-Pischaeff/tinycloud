@@ -239,40 +239,61 @@ class AppWindow extends Component {
 	}
 	
 	downloadItem = () => {
-		if (this.isNotEmpty(this.state.filesChecked)) {
-			var obj = this.state.filesChecked;		
-			for (var key in obj) {
-				fetch('/download', { method: 'POST', 
-									 headers: {	'Accept': 'application/json, text/plain, */*',
-												'Content-Type': 'application/json' }, 
-									 body: JSON.stringify({ 'item': obj[key] }), 
-									})
-					.then(function(response) {
-						if(response.ok) {
-							console.log("111");
-							return response.blob();
-						}
-						throw new Error('Network response was not ok.');
-						})
-					.then(function(myBlob) {
-						console.log("222");
-						download(myBlob, obj[key], "application/octet-stream" );
-						});
-				
-/*				$.get(window.location.href + 'download', 
-					{ "item": obj[key] },
-					(data) => {
-						this.props.tmpfile = data;
-						
-						console.log("d data--");
-					});
-				console.log("---files downloaded---", obj[key]);
-				FileSaver.saveAs(this.props.tmpfile, obj[key]);*/
-			}
-			console.log("333");
-			this.setState({ filesChecked: {} });
-		}
-	}
+		var obj = this.state.filesChecked;
+		for (let key in obj) {
+			let xhr = new XMLHttpRequest();
+			xhr.open("POST", "/download", true);
+			xhr.responseType = "blob";
+			xhr.onload = (event) => {
+				let header = xhr.getResponseHeader('Content-Disposition');
+				let fileName = header.replace("attachment; filename=","");
+				let blob = xhr.response;
+				delete obj[key];
+				this.setState({ filesChecked: obj });
+
+				let a = document.createElement("a");
+				a.style = "display: none";
+				document.body.appendChild(a);
+				let url = window.URL.createObjectURL(blob);
+				a.href = url;
+				a.download = fileName;
+				a.click();
+				window.URL.revokeObjectURL(url);
+//				download(blob, fileName, "application/octet-stream" );
+			};
+			let data = JSON.stringify({ "item" : obj[key] });
+			xhr.send(data);
+		};
+		this.getDirList();
+	}	
+	
+//	downloadItem = () => {	
+//		if (this.isNotEmpty(this.state.filesChecked)) {
+//			var obj = this.state.filesChecked;		
+//			for (var key in obj) {
+//				fetch('/download', { method: 'POST', 
+//									 headers: {	'Accept': 'application/json, text/plain, */*',
+//												'Content-Type': 'application/json' }, 
+//									 body: JSON.stringify({ "item" : obj[key] }), 
+//									})
+//					.then((response) => {
+//						if(response.ok) {
+//							console.log("2--", response);
+//							return response.blob();
+//						}
+//						throw new Error('Network response was not ok.');
+//						})
+//					.then((myBlob) => {
+//						console.log("3--");
+//						download(myBlob, obj[key], "application/octet-stream" );
+//						delete obj[key];
+//						this.setState({ filesChecked: obj });
+//						});
+//			}
+//			console.log("1--", obj);
+//			this.setState({ filesChecked: {} });
+//		}
+//	}
 	
 	render() {
 	const { classes } = this.props;
