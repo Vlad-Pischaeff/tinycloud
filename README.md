@@ -23,9 +23,9 @@ Easy starting
    cd src
 </tt></pre>
 
-<li> Edit <b>tinycloud.conf</b>. Point You own cloud directory
-<li> Change first string of <b>tinycloud.py</b> with Your own path to python.exe
-<li> Launch tinycloud.py
+<li> Edit <b>tinycloud.conf</b>. Point You own shared cloud directory
+<li> Change first string of <b>tinycloud.py</b> with Your own path to <b>python.exe</b>
+<li> Launch <b>tinycloud.py</b>
 <li> In browser connect to <b>http://localhost:5000</b>
 <li> Enjoy!
    </ul>
