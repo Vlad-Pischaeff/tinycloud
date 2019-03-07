@@ -12,7 +12,7 @@ Easy starting
 <li> Run 
 <pre><tt>
    pip install flask
-   pip install flask_core
+   pip install flask_cors
 </tt></pre>
 <li> Create You own project directory structure by
 <pre><tt>
