@@ -248,9 +248,14 @@ class AppWindow extends Component {
 				let header = xhr.getResponseHeader('Content-Disposition');
 				let fileName = header.replace("attachment; filename=","");
 				let blob = xhr.response;
+				//reset checkbox in item obj[key]
+				for (var i in this.state.items) {
+					if (this.state.items[i].name == obj[key]) this.state.items[i].checked = false;
+				}
+				//remove item from list of checked files
 				delete obj[key];
 				this.setState({ filesChecked: obj });
-
+				//download item
 				let a = document.createElement("a");
 				a.style = "display: none";
 				document.body.appendChild(a);
@@ -259,12 +264,14 @@ class AppWindow extends Component {
 				a.download = fileName;
 				a.click();
 				window.URL.revokeObjectURL(url);
+				
 //				download(blob, fileName, "application/octet-stream" );
 			};
 			let data = JSON.stringify({ "item" : obj[key] });
 			xhr.send(data);
 		};
-		this.getDirList();
+		//console.log("2---");
+		//this.getDirList();
 	}	
 	
 //	downloadItem = () => {	
