@@ -18,6 +18,12 @@ export default class ModalRemoveItem extends React.Component {
 	this.props.callbackRemoveItem();
 	this.props.closeWindow();
   };
+  
+  handleKeyPress = (e) => {
+	if (e.key === 'Enter') {
+		this.handleCloseOK();
+	}
+  }
 
   render() {
     return (
@@ -25,6 +31,7 @@ export default class ModalRemoveItem extends React.Component {
         <Dialog
           open={this.props.openWindow}
           onClose={this.handleCloseCancel}
+		  onKeyPress={this.handleKeyPress}
           aria-labelledby="form-dialog-title"
         >
           <DialogTitle id="form-dialog-title">Are you shure to remove this tiems?</DialogTitle>

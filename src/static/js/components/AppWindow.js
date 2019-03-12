@@ -8,7 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import Button from '@material-ui/core/Button';
+//import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
 import Tooltip from '@material-ui/core/Tooltip';
 import { withStyles } from '@material-ui/core/styles';
@@ -19,7 +19,7 @@ import Delete from '@material-ui/icons/Delete';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 import CloudDownload from '@material-ui/icons/CloudDownload';
 
-let download = require('./download');
+//let download = require('./download');
 
 var $ = require('jquery');
 
@@ -248,7 +248,7 @@ class AppWindow extends Component {
 				let header = xhr.getResponseHeader('Content-Disposition');
 				let fileName = header.replace("attachment; filename=","");
 				let blob = xhr.response;
-				//reset checkbox in item obj[key]
+				//reset checkbox in item = obj[key]
 				for (var i in this.state.items) {
 					if (this.state.items[i].name == obj[key]) this.state.items[i].checked = false;
 				}

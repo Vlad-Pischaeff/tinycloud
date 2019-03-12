@@ -14,36 +14,31 @@ export default class ModalCreateDir extends React.Component {
 //state.open походу не нужен, нужно только props.open
  
   state = {
-//    open: false,
 		name:"",
   };
 
-//  handleClickOpen = () => {
-//    this.setState({ open: true });
-//  };
-
   handleCloseCancel = () => {
 	this.props.closeWindow();
-//    this.setState({ open: false });
-//		this.props.open = false;
     this.setState({ name: "" });
   };
 
   handleCloseOK = () => {
 		this.props.closeWindow();
-//  	this.setState({ open: false });
-//		this.props.open = false;
-		console.log("dir=" + this.state.name);
 
 		$.get(window.location.href + 'mkdir', 
 			{ "dir": this.state.name },
     		(data) => {
 				this.props.callbackMkDir(data);
 			});
-
     this.setState({ name: "" });
   };
 
+  handleKeyPress = (e) => {
+	if (e.key === 'Enter') {
+		this.handleCloseOK();
+	}
+  }
+  
   render() {
     return (
       <div>
@@ -60,11 +55,11 @@ export default class ModalCreateDir extends React.Component {
 				autoFocus
 				margin="dense"
 				id="newDirName"
-//              label="New Directory Name"
 				type="text"
 				fullWidth
 				value={this.state.name}
  				onChange={e => this.setState({ name: e.target.value })}
+				onKeyPress={this.handleKeyPress}
             />
           </DialogContent>
           <DialogActions>
