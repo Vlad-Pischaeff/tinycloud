@@ -1,8 +1,16 @@
 # tinycloud
 tiny web cloud application ReactJS &amp; Python based
-
-Easy starting
-
+At present it is possible to:
+<ul>
+	<li>Create Directory
+	<li>Delete Directory or Directories
+	<li>Delete File or Files
+	<li>Download File or Files
+	<li>Upload File or Files
+</ul>
+<p>
+<h2>Easy starting</h2>
+<p>
 <h3>Windows</h3>
 <p>
 
