@@ -49,8 +49,6 @@ class AppWindow extends Component {
 						ClearListItemsForDelete: false,
 						dirChecked: {},
 						filesChecked: {},
-						percent: "0%",
-						value: 0,
 						uploadState: {},
 						};
 		this.getBackList = this.getBackList.bind(this);
@@ -206,7 +204,7 @@ class AppWindow extends Component {
 		xhr.onload = (e) => {
 			if (xhr.readyState === 4) {
 				if (xhr.status === 200) {
-					this.setState({percent: "0%", value: 0});
+
 					delete this.state.uploadState[file];
 
 					if (!this.isNotEmpty(this.state.uploadState))
@@ -224,10 +222,8 @@ class AppWindow extends Component {
 			console.error(xhr.statusText);
 		};
 		xhr.upload.onprogress = (event) => {
-			var p = ~~((+event.loaded/+event.total)*100);
-			var str = p + "%";
-			obj[file] = p;
-			this.setState({percent: str, value: p, uploadState: obj});
+			obj[file] = ~~((+event.loaded / +event.total) * 100);
+			this.setState({ uploadState: obj});
 		}
 		xhr.send(data);
 	}
@@ -277,7 +273,7 @@ class AppWindow extends Component {
 //	downloadItem = () => {	
 //		if (this.isNotEmpty(this.state.filesChecked)) {
 //			var obj = this.state.filesChecked;		
-//			for (var key in obj) {
+//			for (let key in obj) {
 //				fetch('/download', { method: 'POST', 
 //									 headers: {	'Accept': 'application/json, text/plain, */*',
 //												'Content-Type': 'application/json' }, 
@@ -285,27 +281,22 @@ class AppWindow extends Component {
 //									})
 //					.then((response) => {
 //						if(response.ok) {
-//							console.log("2--", response);
 //							return response.blob();
 //						}
 //						throw new Error('Network response was not ok.');
 //						})
 //					.then((myBlob) => {
-//						console.log("3--");
 //						download(myBlob, obj[key], "application/octet-stream" );
 //						delete obj[key];
 //						this.setState({ filesChecked: obj });
 //						});
 //			}
-//			console.log("1--", obj);
 //			this.setState({ filesChecked: {} });
 //		}
 //	}
 	
 	render() {
 	const { classes } = this.props;
-
-//	console.log("ItemList props =", this.props);
 
 		return (
 

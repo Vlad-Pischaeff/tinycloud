@@ -11,10 +11,8 @@ var $ = require('jquery');
 
 export default class ModalCreateDir extends React.Component {
 
-//state.open походу не нужен, нужно только props.open
- 
   state = {
-		name:"",
+	name:"",
   };
 
   handleCloseCancel = () => {
@@ -23,8 +21,7 @@ export default class ModalCreateDir extends React.Component {
   };
 
   handleCloseOK = () => {
-		this.props.closeWindow();
-
+	this.props.closeWindow();
 		$.get(window.location.href + 'mkdir', 
 			{ "dir": this.state.name },
     		(data) => {

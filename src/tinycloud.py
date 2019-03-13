@@ -115,8 +115,15 @@ def rmdir():
 @app.route("/rmfile", methods=["GET", "POST"])
 def rmfile():
     curr_dir = os.getcwd()
-    os.remove(replacer(request.args['file']))
-    print("file to remove--%s" % replacer(request.args['file']))
+    filename = replacer(request.args['file'])
+    if os.path.exists(filename): 
+       os.remove(filename)
+    else:
+        print("Can not delete the %s as it doesn't exists" % filename)
+    try:
+       os.remove(filename)
+    except:
+        print("Error while deleting %s " % filename)
     return lsDir(curr_dir)
 
 @app.route('/download', methods=["GET", "POST"])

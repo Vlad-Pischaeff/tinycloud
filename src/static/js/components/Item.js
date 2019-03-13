@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputBase from '@material-ui/core/InputBase';
+import TextField from '@material-ui/core/TextField';
 import ListItem from '@material-ui/core/ListItem';
 import Checkbox from '@material-ui/core/Checkbox';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -12,6 +16,10 @@ import { palette } from '@material-ui/system';
 var $ = require('jquery');
 
 class Item extends Component {
+	state = {
+		openContextMenu: false,
+		name: "",
+	};
 
 	_handleClick = (event) => {
 		$.get(window.location.href + 'cd', 
@@ -29,7 +37,18 @@ class Item extends Component {
 	replaceSpace(str) {
 		return str.replace( /\s/g, "%20" );
 	}
-
+	
+	handleClickItem =(e) => {
+		e.preventDefault();
+        if (e.type === 'click') {
+			this.setState({openContextMenu : false});
+            console.log('Left click', this.state.openContextMenu);
+        } else if (e.type === 'contextmenu') {
+			this.setState({openContextMenu : true });
+            console.log('Right click', this.state.openContextMenu );
+        }
+    }
+	
 	render() {
 	const {file} = this.props
 	const keyItem = this.props.keyItem
@@ -39,18 +58,18 @@ class Item extends Component {
 	  return (
 		<ListItem button>
 			<Grid container direction="row">
-				<Grid item width="5%">
+				<Grid item style={{width:"5%"}}>
 					<Checkbox tabIndex={-1} height={10} 
 						disableRipple 
 						onChange={()=>this._handleCheck(file.name, keyItem, file.checked, file.type)} 
 						checked={file.checked}/>
 				</Grid>
-				<Grid item width="95%">
+				<Grid item style={{width:"95%"}}>
 				<ListItem onClick={(e) => this._handleClick(this.replaceSpace(file.name))} >
 					<Avatar>
 						<WorkIcon />
 					</Avatar>
-					<ListItemText primary={file.name} secondary={file.date} />
+					<ListItemText primary={file.name} secondary={file.date} style={{width:"100%"}} />
 				</ListItem>
 				</Grid>
 			</Grid>
@@ -60,24 +79,25 @@ class Item extends Component {
 		return (
 		<ListItem button>
 			<Grid container direction="row">
-				<Grid item width="5%" >
+				<Grid item style={{width:"5%"}}>
 					<Checkbox tabIndex={-1} 
 						disableRipple 
 						onChange={()=>this._handleCheck(file.name, keyItem, file.checked, file.type)} 
 						checked={file.checked}/>
 				</Grid>
-				<Grid item width="95%" >
-				<ListItem>
+				<Grid item style={{width:"95%"}}>
+				<ListItem id="myFile" onClick={this.handleClickItem} onContextMenu={this.handleClickItem}>
 					<Avatar>
 						<Description />
 					</Avatar>
-					<ListItemText primary={file.name} secondary={file.date + "   Size: " + file.size} />
+					<ListItemText primary={<InputBase defaultValue={file.name} readOnly={!this.state.openContextMenu} style={{width:"100%"}} />} 
+								  secondary={file.date + "   Size: " + file.size} 
+								  style={{width:"100%"}} />
 				</ListItem>
 				</Grid>
 			</Grid>
 		</ListItem>
 		);
-
 	}
 }
 
