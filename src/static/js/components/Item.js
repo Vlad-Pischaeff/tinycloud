@@ -9,15 +9,36 @@ import Checkbox from '@material-ui/core/Checkbox';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import WorkIcon from '@material-ui/icons/Work';
+import Edit from '@material-ui/icons/Edit'
 import Description from '@material-ui/icons/Description';
 import { sizing } from '@material-ui/system';
 import { palette } from '@material-ui/system';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import Fab from '@material-ui/core/Fab';
+import Tooltip from '@material-ui/core/Tooltip';
+import Button from '@material-ui/core/Button';
+import ModalRenameFile from './ModalRenameFile';
+
+const styles = theme => ({
+  input: {
+    width: '20%',
+  },
+  // Separate this part into it's own CSS class
+  inputFocused: {
+    width: '40%',
+    backgroundColor: "#3f50b5",
+	color: "#ffffff",
+  },
+});
 
 var $ = require('jquery');
 
 class Item extends Component {
 	state = {
-		openContextMenu: false,
+		OpenModalRenameFile: false,
+		changeColor: false,
+		showButtons: true,
 		name: "",
 	};
 
@@ -39,20 +60,45 @@ class Item extends Component {
 	}
 	
 	handleClickItem =(e) => {
-		e.preventDefault();
+/*		e.preventDefault();
         if (e.type === 'click') {
-			this.setState({openContextMenu : false});
-            console.log('Left click', this.state.openContextMenu);
+			this.setState({readOnly : true});
+			this.setState({changeColor : false});
+            console.log('Left click', this.state.changeColor);
         } else if (e.type === 'contextmenu') {
-			this.setState({openContextMenu : true });
-            console.log('Right click', this.state.openContextMenu );
-        }
+			this.setState({readOnly : false});
+			this.setState({changeColor : true});
+            console.log('Right click', this.state.changeColor);
+        }*/
     }
 	
+	handleOnMouseEnter   = (e) => {
+		this.setState({ showButtons: false });
+	};
+	
+	handleOnMouseLeave   = (e) => {
+		this.setState({ showButtons: true });
+	};
+	
+	openModalRenameFile  = (e) => {
+		this.setState({ OpenModalRenameFile: true });
+    }
+	
+	closeModalRenameFile = (e) => {
+		this.setState({ OpenModalRenameFile: false });
+		this.setState({ showButtons: true });
+    }
+
+	setDirList = (data) => {
+		//надо вызвать обновление списка
+		this.props.callbackFromItemList(data);
+	}
+
 	render() {
+	const {classes} = this.props;
 	const {file} = this.props
 	const keyItem = this.props.keyItem
-//	console.log("props=" + this.props);
+//	console.log("props=", this.props.classes);
 
 	if (file.type =='dir') 
 	  return (
@@ -77,32 +123,50 @@ class Item extends Component {
 	  );
 	else 
 		return (
-		<ListItem button>
+		<ListItem button onMouseEnter={this.handleOnMouseEnter} onMouseLeave={this.handleOnMouseLeave} >
 			<Grid container direction="row">
+
 				<Grid item style={{width:"5%"}}>
 					<Checkbox tabIndex={-1} 
 						disableRipple 
 						onChange={()=>this._handleCheck(file.name, keyItem, file.checked, file.type)} 
 						checked={file.checked}/>
 				</Grid>
-				<Grid item style={{width:"95%"}}>
+
+				<Grid item style={{width:"90%"}}>
 				<ListItem id="myFile" onClick={this.handleClickItem} onContextMenu={this.handleClickItem}>
 					<Avatar>
 						<Description />
 					</Avatar>
-					<ListItemText primary={<InputBase defaultValue={file.name} readOnly={!this.state.openContextMenu} style={{width:"100%"}} />} 
+					<ListItemText primary={file.name} 
 								  secondary={file.date + "   Size: " + file.size} 
 								  style={{width:"100%"}} />
 				</ListItem>
 				</Grid>
+
+				<Grid item style={{width:"5%"}}>
+					<Tooltip title="Edit Name of Item">
+					<Button size="small" variant="outlined" color="primary" className={classes.button} 
+						onClick={this.openModalRenameFile} hidden={this.state.showButtons} >
+						<Edit />
+					</Button>
+				</Tooltip> 
+				</Grid>
+
 			</Grid>
+
+			<ModalRenameFile openWindow={this.state.OpenModalRenameFile} filename={file.name}
+							 closeWindow={this.closeModalRenameFile} 
+							 callbackRenameItem={this.setDirList} />
+
 		</ListItem>
+						
 		);
 	}
 }
 
-/*Item.propTypes = {
+Item.propTypes = {
   classes: PropTypes.object.isRequired,
-};*/
+};
 
-export default Item;
+export default withStyles(styles)(Item);

@@ -67,8 +67,8 @@ class AppWindow extends Component {
 	}
 
 	setDirList = (data) => { 
-		this.setState({items: data});
-		this.setState({ dirChecked: {}, filesChecked: {}});		
+		this.setState({ items: data });
+		this.setState({ dirChecked: {}, filesChecked: {}});
 	}
 
 	getHomeList = () => {
@@ -211,7 +211,7 @@ class AppWindow extends Component {
 						this.setState({OpenModalUploadFiles: false});
 
 					this.getDirList();
-					console.log("Uploaded file--", file);
+					console.log("Uploaded file--", file, this.state.items);
 					status = true;
 				} else {
 					console.error(xhr.statusText);
@@ -299,7 +299,7 @@ class AppWindow extends Component {
 	const { classes } = this.props;
 
 		return (
-
+		  
 			<Grid container direction="column">
 			<Grid container direction="row">
 			<div className="Header" >
@@ -372,7 +372,6 @@ class AppWindow extends Component {
 					<ItemList 	items={this.state.items} 
 								callbackFromAppWindow={this.setDirList}
 								callbackFromAppWindowDeleteDir={this.setDelDir}	/>
-
 				</div>
 			</Grid>
 			

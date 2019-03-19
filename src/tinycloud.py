@@ -139,7 +139,6 @@ def fileDownload():
     path="/".join([source, filename])
     print("path for download %s" % path)
     return send_file(path, as_attachment=True, attachment_filename=filename)
-
 	
 @app.route('/upload', methods=['POST','GET'])
 def fileUpload():
@@ -158,6 +157,14 @@ def fileUpload():
     js = json.dumps(data)
     resp = Response(js, status=200, mimetype='application/json')
     return resp
+
+@app.route("/rename", methods=["GET", "POST"])
+def rename():
+    newfile = request.args['newname']
+    oldfile = request.args['oldname']
+    curr_dir = os.getcwd()
+    os.rename(oldfile, newfile)
+    return lsDir(curr_dir)
 
 if __name__ == "__main__":
     app.secret_key = os.urandom(24)

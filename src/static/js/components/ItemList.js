@@ -34,7 +34,7 @@ class ItemList extends Component {
 										<Item 	keyItem={i} 
 												file={n} 
 												setItemsForDelete={this.setItemsForDeleteParent} 
-												callbackFromItemList={this.ItemListCallback}/>
+												callbackFromItemList={this.ItemListCallback} />
 									</li>);
 	return (
 		<ol>
