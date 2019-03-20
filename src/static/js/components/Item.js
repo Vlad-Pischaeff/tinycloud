@@ -102,7 +102,7 @@ class Item extends Component {
 
 	if (file.type =='dir') 
 	  return (
-		<ListItem button>
+		<ListItem button onMouseEnter={this.handleOnMouseEnter} onMouseLeave={this.handleOnMouseLeave} >
 			<Grid container direction="row">
 				<Grid item style={{width:"5%"}}>
 					<Checkbox tabIndex={-1} height={10} 
@@ -110,14 +110,29 @@ class Item extends Component {
 						onChange={()=>this._handleCheck(file.name, keyItem, file.checked, file.type)} 
 						checked={file.checked}/>
 				</Grid>
-				<Grid item style={{width:"95%"}}>
-				<ListItem onClick={(e) => this._handleClick(this.replaceSpace(file.name))} >
+				
+				<Grid item style={{width:"90%"}}>
+				<ListItem id="myDir" onClick={(e) => this._handleClick(this.replaceSpace(file.name))} >
 					<Avatar>
 						<WorkIcon />
 					</Avatar>
 					<ListItemText primary={file.name} secondary={file.date} style={{width:"100%"}} />
 				</ListItem>
 				</Grid>
+				
+				<Grid item style={{width:"5%"}}>
+					<Tooltip title="Edit Name of Item">
+					<Button size="small" variant="outlined" color="primary" className={classes.button} 
+						onClick={this.openModalRenameFile} hidden={this.state.showButtons} >
+						<Edit />
+					</Button>
+				</Tooltip> 
+				</Grid>
+				
+				<ModalRenameFile openWindow={this.state.OpenModalRenameFile} filename={file.name}
+							 closeWindow={this.closeModalRenameFile} 
+							 callbackRenameItem={this.setDirList} />
+
 			</Grid>
 		</ListItem>
 	  );

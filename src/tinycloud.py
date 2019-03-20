@@ -163,7 +163,8 @@ def rename():
     newfile = request.args['newname']
     oldfile = request.args['oldname']
     curr_dir = os.getcwd()
-    os.rename(oldfile, newfile)
+    if newfile:
+       os.rename(oldfile, newfile)
     return lsDir(curr_dir)
 
 if __name__ == "__main__":
