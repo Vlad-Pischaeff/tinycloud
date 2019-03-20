@@ -7,6 +7,7 @@ At present it is possible to:
 	<li>Delete File or Files
 	<li>Download File or Files
 	<li>Upload File or Files
+	<li>Rename File or Directory
 </ul>
 <p>
 <h2>Easy starting</h2>
