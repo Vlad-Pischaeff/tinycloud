@@ -18,6 +18,9 @@ import CreateNewFolder from '@material-ui/icons/CreateNewFolder';
 import Delete from '@material-ui/icons/Delete';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 import CloudDownload from '@material-ui/icons/CloudDownload';
+import IconButton from '@material-ui/core/IconButton';
+import Badge from '@material-ui/core/Badge';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 
 //let download = require('./download');
 
@@ -50,6 +53,7 @@ class AppWindow extends Component {
 						dirChecked: {},
 						filesChecked: {},
 						uploadState: {},
+						itemsForCopyOrMove: [],
 						};
 		this.getBackList = this.getBackList.bind(this);
 
@@ -130,13 +134,13 @@ class AppWindow extends Component {
 			var obj = this.state.dirChecked;
 			(c) ? obj[i] = data : delete obj[i];
 			this.setState({dirChecked: obj});
-			console.log("dir=", this.state.dirChecked, obj, c, t);
+			console.log("dir=", this.state.dirChecked, obj, c, t, i);
 		}
 		else {
 			var obj = this.state.filesChecked;
 			(c) ? obj[i] = data : delete obj[i];
 			this.setState({filesChecked: obj});
-			console.log("file=", this.state.filesChecked, obj, c, t);
+			console.log("file=", this.state.filesChecked, obj, c, t, i);
 		}
 	}
 	
@@ -294,6 +298,22 @@ class AppWindow extends Component {
 //			this.setState({ filesChecked: {} });
 //		}
 //	}
+
+	addToBundleFinal = (name, type, op) => {
+		let mass = this.state.itemsForCopyOrMove;
+		if (!mass.some((element) => element['name'] == name)) {
+			let obj = {};
+			obj['name'] = name;
+			obj['type'] = type;
+			obj['operation'] = op;
+			$.get(window.location.href + 'pwd', (data) => {
+				obj['path'] = data;
+			});
+			mass.push(obj);
+			this.setState({itemsForCopyOrMove: mass});
+			console.log("itemsForCopyOrMove--", this.state.itemsForCopyOrMove);
+		}
+	}
 	
 	render() {
 	const { classes } = this.props;
@@ -302,8 +322,7 @@ class AppWindow extends Component {
 		  
 			<Grid container direction="column">
 			<Grid container direction="row">
-			<div className="Header" >
-				<Grid item>
+				<div className="Header" style={{width:"90%"}}>
 				<Tooltip title="Home">
 					<Fab size="small" variant="contained" color="primary" className={classes.button} 
 						onClick={this.getHomeList}>
@@ -350,7 +369,15 @@ class AppWindow extends Component {
 						<Delete />
 					</Fab>
 				</Tooltip >
-				</Grid>
+				</div>
+				
+				<div className="HeaderLeft" style={{width:"10%"}}>
+					<IconButton aria-label="Cart">
+					<Badge badgeContent={this.state.itemsForCopyOrMove.length} color="primary" classes={{ badge: classes.badge }}>
+						<ShoppingCartIcon />
+					</Badge>
+					</IconButton>
+				</div>
 				
 				<ModalCreateDir openWindow={this.state.OpenModalCreateDir} 
 								closeWindow={this.closeModalCreateDir} 
@@ -358,23 +385,20 @@ class AppWindow extends Component {
 
 				<ModalRemoveItem openWindow={this.state.OpenModalRemoveItem}
 								 closeWindow={this.closeModalRemoveItem} 
-								 callbackRemoveItem={this.rmDir}/>
+								 callbackRemoveItem={this.rmDir} />
 								
 				<ModalUploadFiles 	openWindow={this.state.OpenModalUploadFiles} 
-									state={this.state.uploadState}
-									/>
-
-			</div>
+									state={this.state.uploadState} />
+	
 			</Grid>
-			
-			<Grid item>
+				
 				<div className="ItemWindow"  >
 					<ItemList 	items={this.state.items} 
 								callbackFromAppWindow={this.setDirList}
-								callbackFromAppWindowDeleteDir={this.setDelDir}	/>
+								callbackFromAppWindowDeleteDir={this.setDelDir}	
+								___addToBundle={this.addToBundleFinal}/>
 				</div>
-			</Grid>
-			
+				
 			</Grid>
 		);
 	}

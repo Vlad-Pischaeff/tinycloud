@@ -18,6 +18,10 @@ class ItemList extends Component {
 		this.props.callbackFromAppWindowDeleteDir(data, i, c, t);
 	}
 
+	__addToBundle = (name, type, op) => {
+		this.props.___addToBundle(name, type, op);
+	}
+	
 	render() {
 	
 	const {items} = this.props
@@ -34,7 +38,8 @@ class ItemList extends Component {
 										<Item 	keyItem={i} 
 												file={n} 
 												setItemsForDelete={this.setItemsForDeleteParent} 
-												callbackFromItemList={this.ItemListCallback} />
+												callbackFromItemList={this.ItemListCallback} 
+												_addToBundle={this.__addToBundle} />
 									</li>);
 	return (
 		<ol>

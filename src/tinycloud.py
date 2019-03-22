@@ -32,6 +32,7 @@ home_dir = directory
 f.close()
 
 app = Flask(__name__, static_folder="./static/dist", template_folder="../public")
+app.secret_key = os.urandom(24)
 
 def replacer(str):
   return str.replace("%20", " ")
@@ -79,6 +80,10 @@ def cd():
     curr_dir = os.getcwd() + '/' + request.args['dir']
     os.chdir(replacer(curr_dir))
     return lsDir(curr_dir)
+
+@app.route("/pwd", methods=["GET", "POST"])
+def pwd():
+    return os.getcwd()
 
 @app.route("/home", methods=["GET", "POST"])
 def home():
@@ -148,9 +153,10 @@ def fileUpload():
     global curr_dir 
     curr_dir = target
     file = request.files['file'] 
-    logger.info("welcome to upload - %s" % file)
-    filename = secure_filename(file.filename)
+    filename = file.filename
+#    filename = secure_filename(file.filename)
     destination="/".join([target, filename])
+    logger.info("welcome to upload - %s" % filename)
     file.save(destination)
     session['uploadFilePath']=destination
     data={"Pischaeff": filename}
@@ -168,7 +174,6 @@ def rename():
     return lsDir(curr_dir)
 
 if __name__ == "__main__":
-    app.secret_key = os.urandom(24)
     app.run(debug=True)
 
 #print('Content-type: text/html\r\n\r')

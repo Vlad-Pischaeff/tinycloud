@@ -90,10 +90,14 @@ class Item extends Component {
     }
 
 	setDirList = (data) => {
-		//надо вызвать обновление списка
 		this.props.callbackFromItemList(data);
 	}
-
+	
+	addToBundle = (name, type, op) => {
+		this.props._addToBundle(name, type, op);
+//		console.log("onClick--", name, type, op);
+	}
+	
 	render() {
 	const {classes} = this.props;
 	const {file} = this.props
@@ -111,7 +115,7 @@ class Item extends Component {
 						checked={file.checked}/>
 				</Grid>
 				
-				<Grid item style={{width:"90%"}}>
+				<Grid item style={{width:"65%"}}>
 				<ListItem id="myDir" onClick={(e) => this._handleClick(this.replaceSpace(file.name))} >
 					<Avatar>
 						<WorkIcon />
@@ -120,13 +124,27 @@ class Item extends Component {
 				</ListItem>
 				</Grid>
 				
-				<Grid item style={{width:"5%"}}>
+				<Grid item style={{width:"30%"}}>
 					<Tooltip title="Edit Name of Item">
 					<Button size="small" variant="outlined" color="primary" className={classes.button} 
 						onClick={this.openModalRenameFile} hidden={this.state.showButtons} >
 						<Edit />
 					</Button>
-				</Tooltip> 
+					</Tooltip> 
+
+					<Tooltip title="Copy Item">
+					<Button size="small" variant="outlined" color="primary" className={classes.button} 
+						onClick={()=>this.addToBundle(file.name, file.type, 'copy')} hidden={this.state.showButtons} >
+						<img src={require('../img/copy1.svg')} style={{width:"24px", height:"24px"}} />
+					</Button>
+					</Tooltip> 
+					
+					<Tooltip title="Move Item">
+					<Button size="small" variant="outlined" color="primary" className={classes.button} 
+						onClick={()=>this.addToBundle(file.name, file.type, 'move')} hidden={this.state.showButtons} >
+						<img src={require('../img/cut1.svg')} style={{width:"24px", height:"24px"}} />
+					</Button>
+					</Tooltip> 
 				</Grid>
 				
 				<ModalRenameFile openWindow={this.state.OpenModalRenameFile} filename={file.name}
@@ -148,7 +166,7 @@ class Item extends Component {
 						checked={file.checked}/>
 				</Grid>
 
-				<Grid item style={{width:"90%"}}>
+				<Grid item style={{width:"65%"}}>
 				<ListItem id="myFile" onClick={this.handleClickItem} onContextMenu={this.handleClickItem}>
 					<Avatar>
 						<Description />
@@ -159,13 +177,27 @@ class Item extends Component {
 				</ListItem>
 				</Grid>
 
-				<Grid item style={{width:"5%"}}>
+				<Grid item style={{width:"30%"}}>
 					<Tooltip title="Edit Name of Item">
 					<Button size="small" variant="outlined" color="primary" className={classes.button} 
-						onClick={this.openModalRenameFile} hidden={this.state.showButtons} >
+						onClick={this.openModalRenameFile} hidden={this.state.showButtons}>
 						<Edit />
 					</Button>
-				</Tooltip> 
+					</Tooltip> 
+
+					<Tooltip title="Copy Item">
+					<Button size="small" variant="outlined" color="primary" className={classes.button} 
+						onClick={()=>this.addToBundle(file.name, file.type, 'copy')} hidden={this.state.showButtons} >
+						<img src={require('../img/copy1.svg')} style={{width:"24px", height:"24px"}} />
+					</Button>
+					</Tooltip>
+					
+					<Tooltip title="Move Item">
+					<Button size="small" variant="outlined" color="primary" className={classes.button} 
+						onClick={()=>this.addToBundle(file.name, file.type, 'move')} hidden={this.state.showButtons} >
+						<img src={require('../img/cut1.svg')} style={{width:"24px", height:"24px"}} />
+					</Button>
+					</Tooltip> 					
 				</Grid>
 
 			</Grid>
