@@ -8,6 +8,8 @@ At present it is possible to:
 	<li>Download File or Files
 	<li>Upload File or Files
 	<li>Rename File or Directory
+	<li>Copy File or Directory
+	<li>Move File or Directory
 </ul>
 <p>
 <h2>Easy starting</h2>
