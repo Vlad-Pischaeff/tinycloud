@@ -18,8 +18,8 @@ class ItemList extends Component {
 		this.props.callbackFromAppWindowDeleteDir(data, i, c, t);
 	}
 
-	__addToBundle = (name, type, op) => {
-		this.props.___addToBundle(name, type, op);
+	__addToBundle = (name, type, act) => {
+		this.props.___addToBundle(name, type, act);
 	}
 	
 	render() {

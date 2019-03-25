@@ -14,7 +14,7 @@ export default class ModalUploadFiles extends React.Component {
 		
 		const uploadElements = Object.keys(this.props.state).map((n) =>
 				<div>
-				<ListItem >
+				<ListItem>
 					<Avatar>
 						<CircularProgress variant="static" value={this.props.state[n]} />
 					</Avatar>

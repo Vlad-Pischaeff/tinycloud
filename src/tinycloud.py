@@ -7,6 +7,7 @@ import os
 import sys
 import json
 import logging
+import shutil
 from werkzeug.utils import secure_filename
 from flask_cors import CORS, cross_origin
 #import cgi
@@ -172,6 +173,26 @@ def rename():
     if newfile:
        os.rename(oldfile, newfile)
     return lsDir(curr_dir)
+
+@app.route("/paste", methods=["GET", "POST"])
+def paste():
+    destination = os.getcwd()
+    filename = request.args['name']
+    filepath = request.args['path']
+    fileact = request.args['act']
+    source = "/".join([filepath, filename])
+    dst = "/".join([destination, filename])
+    tmp = source + ".tmp"
+#    print("copy  file %s to %s, %s" % (source, destination, tmp))
+    if (fileact=='copy'):
+       if os.path.isdir(source):
+          shutil.copytree(source, tmp, False, None)
+          os.rename(tmp, dst)  
+       else:
+          shutil.copy2(source, destination)
+    if (fileact=='move'):
+          os.rename(source, dst)  
+    return lsDir(destination)
 
 if __name__ == "__main__":
     app.run(debug=True)

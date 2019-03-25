@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ItemList from './ItemList';
 import ModalCreateDir from './ModalCreateDir';
 import ModalRemoveItem from './ModalRemoveItem';
+import ModalPasteItems from './ModalPasteItems';
 import ModalUploadFiles from './ModalUploadFiles';
 import Grid from '@material-ui/core/Grid';
 
@@ -49,6 +50,7 @@ class AppWindow extends Component {
 						OpenModalCreateDir: false,
 						OpenModalRemoveItem: false,
 						OpenModalUploadFiles: false,
+						OpenModalPasteItems: false,
 						ClearListItemsForDelete: false,
 						dirChecked: {},
 						filesChecked: {},
@@ -167,6 +169,10 @@ class AppWindow extends Component {
 			e.checked = false;
 		});
 		this.setState({ dirChecked: {}, filesChecked: {}});
+	}
+	
+	openModalPasteItem = () => {
+		this.setState({ OpenModalPasteItems: true });
 	}
 	
 /*	async function agetPost(e) {
@@ -299,20 +305,27 @@ class AppWindow extends Component {
 //		}
 //	}
 
-	addToBundleFinal = (name, type, op) => {
+	addToBundleFinal = (name, type, act) => {
 		let mass = this.state.itemsForCopyOrMove;
 		if (!mass.some((element) => element['name'] == name)) {
 			let obj = {};
 			obj['name'] = name;
 			obj['type'] = type;
-			obj['operation'] = op;
+			obj['action'] = act;
 			$.get(window.location.href + 'pwd', (data) => {
 				obj['path'] = data;
 			});
 			mass.push(obj);
 			this.setState({itemsForCopyOrMove: mass});
-			console.log("itemsForCopyOrMove--", this.state.itemsForCopyOrMove);
+//			console.log("itemsForCopyOrMove--", this.state.itemsForCopyOrMove);
 		}
+	}
+	
+	removeFromBundle = (name) => {
+		let mass = this.state.itemsForCopyOrMove;
+		var new_mass = mass.filter((element) => element['name'] != name);
+		this.setState({itemsForCopyOrMove: new_mass});
+		console.log("itemsForCopyOrMove--", this.state.itemsForCopyOrMove);
 	}
 	
 	render() {
@@ -372,7 +385,7 @@ class AppWindow extends Component {
 				</div>
 				
 				<div className="HeaderLeft" style={{width:"10%"}}>
-					<IconButton aria-label="Cart">
+					<IconButton aria-label="Cart" onClick={this.openModalPasteItem} >
 					<Badge badgeContent={this.state.itemsForCopyOrMove.length} color="primary" classes={{ badge: classes.badge }}>
 						<ShoppingCartIcon />
 					</Badge>
@@ -387,8 +400,15 @@ class AppWindow extends Component {
 								 closeWindow={this.closeModalRemoveItem} 
 								 callbackRemoveItem={this.rmDir} />
 								
-				<ModalUploadFiles 	openWindow={this.state.OpenModalUploadFiles} 
-									state={this.state.uploadState} />
+				<ModalUploadFiles openWindow={this.state.OpenModalUploadFiles} 
+								  state={this.state.uploadState} />
+				
+				<ModalPasteItems  openWindow={this.state.OpenModalPasteItems}
+								  clearContent={()=>this.setState({ itemsForCopyOrMove: [] }) }	
+								  listContent={this.setDirList}
+								  removeItemFromContent={this.removeFromBundle}
+								  closeWindow={()=>this.setState({ OpenModalPasteItems: false })}		
+								  items={this.state.itemsForCopyOrMove} />
 	
 			</Grid>
 				
