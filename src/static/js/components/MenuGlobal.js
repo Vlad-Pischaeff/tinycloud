@@ -4,7 +4,7 @@ class MenuGlobal extends Component {
     render() {
         return (
             <div className="MenuGlobal" >
-                <h3>"Menu Global"</h3>
+                <img src={require('../img/Logo5.png')} />
             </div>
         );
     }

@@ -325,7 +325,7 @@ class AppWindow extends Component {
 		let mass = this.state.itemsForCopyOrMove;
 		var new_mass = mass.filter((element) => element['name'] != name);
 		this.setState({itemsForCopyOrMove: new_mass});
-		console.log("itemsForCopyOrMove--", this.state.itemsForCopyOrMove);
+//		console.log("itemsForCopyOrMove--", this.state.itemsForCopyOrMove);
 	}
 	
 	render() {

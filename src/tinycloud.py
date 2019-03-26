@@ -27,6 +27,7 @@ conf_file = path + '/tinycloud.conf'
 with open(conf_file, 'r') as f:
     data = json.loads(f.read())
 directory = data["directory"]
+#print("data-- %s" % data)
 os.chdir(directory)
 curr_dir = directory
 home_dir = directory

@@ -19,6 +19,7 @@ import Fab from '@material-ui/core/Fab';
 import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 import ModalRenameFile from './ModalRenameFile';
+import ItemName from './ItemName';
 
 const styles = theme => ({
   input: {
@@ -93,8 +94,8 @@ class Item extends Component {
 		this.props.callbackFromItemList(data);
 	}
 	
-	addToBundle = (name, type, op) => {
-		this.props._addToBundle(name, type, op);
+	addToBundle = (name, type, act) => {
+		this.props._addToBundle(name, type, act);
 //		console.log("onClick--", name, type, op);
 	}
 	
@@ -120,7 +121,8 @@ class Item extends Component {
 					<Avatar>
 						<WorkIcon />
 					</Avatar>
-					<ListItemText primary={file.name} secondary={file.date} style={{width:"100%"}} />
+					<ListItemText 	primary={<ItemName name={file.name} fontWeight={this.state.showButtons} />} 
+									secondary={file.date} style={{width:"100%"}} />
 				</ListItem>
 				</Grid>
 				
@@ -171,7 +173,7 @@ class Item extends Component {
 					<Avatar>
 						<Description />
 					</Avatar>
-					<ListItemText primary={file.name} 
+					<ListItemText primary={<ItemName name={file.name} fontWeight={this.state.showButtons} />} 
 								  secondary={file.date + "   Size: " + file.size} 
 								  style={{width:"100%"}} />
 				</ListItem>

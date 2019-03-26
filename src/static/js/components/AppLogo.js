@@ -4,7 +4,7 @@ class AppLogo extends Component {
     render() {
         return (
             <div className="AppLogo">
-                 <img src={require('../img/Logo4.svg')} alt="tinyCLOUD" height="100%" width="100%"/>
+                 <img src={require('../img/Logo4.png')} alt="tinyCLOUD" height="100%" width="100%"/>
             </div>
         );
     }
