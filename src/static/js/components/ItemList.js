@@ -9,13 +9,13 @@ class ItemList extends Component {
 	}
 	
 //transit: forms content of new directory from Item to AppWindow
-	ItemListCallback = (data) => {
-		this.props.callbackFromAppWindow(data);
+	__setDirList = (data) => {
+		this.props.___setDirList(data);
 	}
 	
 //transit: forms lists for delete from Item to AppWindow 
-	setItemsForDeleteParent = (data, i, c, t) => {
-		this.props.callbackFromAppWindowDeleteDir(data, i, c, t);
+	__setDelItem = (data, i, c, t) => {
+		this.props.___setDelItem(data, i, c, t);
 	}
 
 	__addToBundle = (name, type, act) => {
@@ -37,8 +37,8 @@ class ItemList extends Component {
 									<li>
 										<Item 	keyItem={i} 
 												file={n} 
-												setItemsForDelete={this.setItemsForDeleteParent} 
-												callbackFromItemList={this.ItemListCallback} 
+												_setDelItem={this.__setDelItem} 
+												_setDirList={this.__setDirList} 
 												_addToBundle={this.__addToBundle} />
 									</li>);
 	return (

@@ -19,6 +19,7 @@ import Fab from '@material-ui/core/Fab';
 import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 import ModalRenameFile from './ModalRenameFile';
+import ModalPlayVideo from './ModalPlayVideo';
 import ItemName from './ItemName';
 
 const styles = theme => ({
@@ -38,39 +39,76 @@ var $ = require('jquery');
 class Item extends Component {
 	state = {
 		OpenModalRenameFile: false,
+		OpenModalPlayVideo: false,
 		changeColor: false,
 		showButtons: true,
 		name: "",
+		str: "",
 	};
 
-	_handleClick = (event) => {
+	openDir = (event) => {
 		$.get(window.location.href + 'cd', 
 			{ "dir": event },
     		(data) => {
-				this.props.callbackFromItemList(data);
+				this.props._setDirList(data);
 			});
 	}
 
-	_handleCheck = (data, i, c, t) => {
+	setDelItem = (data, i, c, t) => {
 		this.props.file.checked = !this.props.file.checked;
-		this.props.setItemsForDelete(this.replaceSpace(data), i, !c, t);
+		this.props._setDelItem(this.replaceSpace(data), i, !c, t);
 	}
 
 	replaceSpace(str) {
 		return str.replace( /\s/g, "%20" );
 	}
 	
-	handleClickItem =(e) => {
-/*		e.preventDefault();
-        if (e.type === 'click') {
-			this.setState({readOnly : true});
-			this.setState({changeColor : false});
-            console.log('Left click', this.state.changeColor);
-        } else if (e.type === 'contextmenu') {
-			this.setState({readOnly : false});
-			this.setState({changeColor : true});
-            console.log('Right click', this.state.changeColor);
-        }*/
+	handleClickItem = (e, name) => {
+		e.preventDefault();
+		var ext = name.toLowerCase().slice(-3);
+		if ((ext == 'pdf') || (ext == 'txt'))  {
+			if (e.type === 'click') {
+				let xhr = new XMLHttpRequest();
+				xhr.open("POST", "/download", true);
+				xhr.responseType = "blob";
+				xhr.onload = (event) => {
+					let blob = xhr.response;
+					let a = document.createElement("a");
+					a.style = "display: none";
+					document.body.appendChild(a);
+					let url = window.URL.createObjectURL(blob);
+					setTimeout(() => {window.open(url);}, 100);
+				};
+				let data = JSON.stringify({ "item" : name });
+				xhr.send(data);
+				console.log('Left click', name, ext);
+			} else if (e.type === 'contextmenu') {
+				console.log('Right click', e, name);
+			}
+		}
+		if ((ext == 'mp4') || (ext == 'mpeg4'))  {
+			if (e.type === 'click') {
+				let xhr = new XMLHttpRequest();
+				xhr.open("POST", "/download", true);
+				xhr.responseType = "blob";
+				xhr.onload = (event) => {
+					let blob = xhr.response;
+					let a = document.createElement("a");
+					a.style = "display: none";
+					document.body.appendChild(a);
+					let url = window.URL.createObjectURL(blob);
+					this.setState({ name: url });
+					this.setState({ str: name });
+					//setTimeout(() => {this.refs.vidRef.play();}, 100);
+					this.openModalPlayVideo();
+				};
+				let data = JSON.stringify({ "item" : name });
+				xhr.send(data);
+				console.log('Left click', name, ext);
+			} else if (e.type === 'contextmenu') {
+				console.log('Right click', e, name);
+			}
+		}
     }
 	
 	handleOnMouseEnter   = (e) => {
@@ -90,8 +128,17 @@ class Item extends Component {
 		this.setState({ showButtons: true });
     }
 
+	openModalPlayVideo  = (e) => {
+		this.setState({ OpenModalPlayVideo: true });
+    }
+	
+	closeModalPlayVideo = (e) => {
+		this.setState({ OpenModalPlayVideo: false });
+		this.setState({ showButtons: true });
+    }
+	
 	setDirList = (data) => {
-		this.props.callbackFromItemList(data);
+		this.props._setDirList(data);
 	}
 	
 	addToBundle = (name, type, act) => {
@@ -107,17 +154,18 @@ class Item extends Component {
 
 	if (file.type =='dir') 
 	  return (
-		<ListItem button onMouseEnter={this.handleOnMouseEnter} onMouseLeave={this.handleOnMouseLeave} >
+		<ListItem button onMouseEnter={this.handleOnMouseEnter} onMouseLeave={this.handleOnMouseLeave} 
+				  style={{paddingTop: "0", paddingBottom: "0" }} >
 			<Grid container direction="row">
 				<Grid item style={{width:"5%"}}>
 					<Checkbox tabIndex={-1} height={10} 
 						disableRipple 
-						onChange={()=>this._handleCheck(file.name, keyItem, file.checked, file.type)} 
+						onChange={()=>this.setDelItem(file.name, keyItem, file.checked, file.type)} 
 						checked={file.checked}/>
 				</Grid>
 				
 				<Grid item style={{width:"65%"}}>
-				<ListItem id="myDir" onClick={(e) => this._handleClick(this.replaceSpace(file.name))} >
+				<ListItem id="myDir" onClick={(e) => this.openDir(this.replaceSpace(file.name))} >
 					<Avatar>
 						<WorkIcon />
 					</Avatar>
@@ -128,21 +176,21 @@ class Item extends Component {
 				
 				<Grid item style={{width:"30%"}}>
 					<Tooltip title="Edit Name of Item">
-					<Button size="small" variant="outlined" color="primary" className={classes.button} 
+					<Button style={{width:"40px", minWidth:"0"}} size="small" variant="outlined" color="primary" className={classes.button} 
 						onClick={this.openModalRenameFile} hidden={this.state.showButtons} >
 						<Edit />
 					</Button>
 					</Tooltip> 
 
 					<Tooltip title="Copy Item">
-					<Button size="small" variant="outlined" color="primary" className={classes.button} 
+					<Button style={{width:"40px", minWidth:"0"}} size="small" variant="outlined" color="primary" className={classes.button} 
 						onClick={()=>this.addToBundle(file.name, file.type, 'copy')} hidden={this.state.showButtons} >
 						<img src={require('../img/copy1.svg')} style={{width:"24px", height:"24px"}} />
 					</Button>
 					</Tooltip> 
 					
 					<Tooltip title="Move Item">
-					<Button size="small" variant="outlined" color="primary" className={classes.button} 
+					<Button style={{width:"40px", minWidth:"0"}} size="small" variant="outlined" color="primary" className={classes.button} 
 						onClick={()=>this.addToBundle(file.name, file.type, 'move')} hidden={this.state.showButtons} >
 						<img src={require('../img/cut1.svg')} style={{width:"24px", height:"24px"}} />
 					</Button>
@@ -158,18 +206,20 @@ class Item extends Component {
 	  );
 	else 
 		return (
-		<ListItem button onMouseEnter={this.handleOnMouseEnter} onMouseLeave={this.handleOnMouseLeave} >
+		<ListItem button onMouseEnter={this.handleOnMouseEnter} onMouseLeave={this.handleOnMouseLeave} 
+				  style={{paddingTop: "0", paddingBottom: "0" }} >
 			<Grid container direction="row">
 
 				<Grid item style={{width:"5%"}}>
 					<Checkbox tabIndex={-1} 
 						disableRipple 
-						onChange={()=>this._handleCheck(file.name, keyItem, file.checked, file.type)} 
+						onChange={()=>this.setDelItem(file.name, keyItem, file.checked, file.type)} 
 						checked={file.checked}/>
 				</Grid>
 
 				<Grid item style={{width:"65%"}}>
-				<ListItem id="myFile" onClick={this.handleClickItem} onContextMenu={this.handleClickItem}>
+				<ListItem id="myFile" 	onClick={(e)=>this.handleClickItem(e, file.name)} 
+										onContextMenu={(e)=>this.handleClickItem(e, file.name)}>
 					<Avatar>
 						<Description />
 					</Avatar>
@@ -181,21 +231,21 @@ class Item extends Component {
 
 				<Grid item style={{width:"30%"}}>
 					<Tooltip title="Edit Name of Item">
-					<Button size="small" variant="outlined" color="primary" className={classes.button} 
+					<Button style={{width:"40px", minWidth:"0"}} size="small" variant="outlined" color="primary" className={classes.button} 
 						onClick={this.openModalRenameFile} hidden={this.state.showButtons}>
 						<Edit />
 					</Button>
 					</Tooltip> 
 
 					<Tooltip title="Copy Item">
-					<Button size="small" variant="outlined" color="primary" className={classes.button} 
+					<Button style={{width:"40px", minWidth:"0"}} size="small" variant="outlined" color="primary" className={classes.button} 
 						onClick={()=>this.addToBundle(file.name, file.type, 'copy')} hidden={this.state.showButtons} >
 						<img src={require('../img/copy1.svg')} style={{width:"24px", height:"24px"}} />
 					</Button>
 					</Tooltip>
 					
 					<Tooltip title="Move Item">
-					<Button size="small" variant="outlined" color="primary" className={classes.button} 
+					<Button style={{width:"40px", minWidth:"0"}} size="small" variant="outlined" color="primary" className={classes.button} 
 						onClick={()=>this.addToBundle(file.name, file.type, 'move')} hidden={this.state.showButtons} >
 						<img src={require('../img/cut1.svg')} style={{width:"24px", height:"24px"}} />
 					</Button>
@@ -207,7 +257,10 @@ class Item extends Component {
 			<ModalRenameFile openWindow={this.state.OpenModalRenameFile} filename={file.name}
 							 closeWindow={this.closeModalRenameFile} 
 							 callbackRenameItem={this.setDirList} />
-
+							 
+			<ModalPlayVideo  openWindow={this.state.OpenModalPlayVideo} filename={this.state.name} str={this.state.str}
+							 closeWindow={this.closeModalPlayVideo} />
+							 
 		</ListItem>
 						
 		);

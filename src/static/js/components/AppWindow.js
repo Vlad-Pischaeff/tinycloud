@@ -131,7 +131,7 @@ class AppWindow extends Component {
 		}
 	}
 	
-	setDelDir = (data, i, c, t) => {
+	setDelItem = (data, i, c, t) => {
 		if (t == "dir")	{
 			var obj = this.state.dirChecked;
 			(c) ? obj[i] = data : delete obj[i];
@@ -266,11 +266,13 @@ class AppWindow extends Component {
 				a.style = "display: none";
 				document.body.appendChild(a);
 				let url = window.URL.createObjectURL(blob);
+//				window.open(url); //for pdf
 				a.href = url;
 				a.download = fileName;
 				a.click();
-				window.URL.revokeObjectURL(url);
-				
+				setTimeout(() => {window.URL.revokeObjectURL(url);}, 100);
+    			// For Firefox it is necessary to delay revoking the ObjectURL
+		
 //				download(blob, fileName, "application/octet-stream" );
 			};
 			let data = JSON.stringify({ "item" : obj[key] });
@@ -414,8 +416,8 @@ class AppWindow extends Component {
 				
 				<div className="ItemWindow"  >
 					<ItemList 	items={this.state.items} 
-								callbackFromAppWindow={this.setDirList}
-								callbackFromAppWindowDeleteDir={this.setDelDir}	
+								___setDirList={this.setDirList}
+								___setDelItem={this.setDelItem}	
 								___addToBundle={this.addToBundleFinal}/>
 				</div>
 				

@@ -10,19 +10,19 @@ class App extends Component {
     return (
 
 		<Grid container direction="column">
-			<Grid item style={{height:"30px"}}>
+
+			<Grid item style={{height:"24px", width:"100%"}}>
 				<AppLogo />
 			</Grid>
 			
-			<Grid item style={{height:"30px"}} >
+			<Grid item style={{height:"24px", width:"100%"}} >
 				<MenuGlobal />
 			</Grid>
-			
+
 			<Grid item>
-				<div className="AppWindow" >
-					<AppWindow />
-				</div>
+				<AppWindow />
 			</Grid>
+
 		</Grid>
 
     );
