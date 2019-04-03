@@ -24,10 +24,8 @@ export default class ModalUploadFiles extends React.Component {
 				);
 						
 		return (
-		<div>
-        <Dialog
-			open={this.props.openWindow}
-			aria-labelledby="form-dialog-title">
+
+        <Dialog	open={this.props.openWindow} aria-labelledby="form-dialog-title">
 			<DialogTitle id="form-dialog-title">Uploading files</DialogTitle>
 			<DialogContent>
 			
@@ -35,7 +33,7 @@ export default class ModalUploadFiles extends React.Component {
 				
 			</DialogContent>
         </Dialog>
-		</div>
+
 		);
 	}
 }

@@ -266,7 +266,7 @@ class AppWindow extends Component {
 				a.style = "display: none";
 				document.body.appendChild(a);
 				let url = window.URL.createObjectURL(blob);
-//				window.open(url); //for pdf
+				//window.open(url); //for pdf, txt
 				a.href = url;
 				a.download = fileName;
 				a.click();

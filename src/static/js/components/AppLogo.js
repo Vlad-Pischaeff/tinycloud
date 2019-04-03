@@ -7,7 +7,7 @@ class AppLogo extends Component {
             <div className="AppLogo"
 				 style={{ backgroundImage: `url(${Background})`,  
 						  backgroundSize: 'cover', 
-						  backgroundRepeat: 'no-repeat' }} >
+						  backgroundRepeat: 'no-repeat'}} >
 				<p>&nbsp;</p>
             </div>
         );

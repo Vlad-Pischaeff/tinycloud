@@ -3,7 +3,7 @@ import AppLogo from './AppLogo'
 import MenuGlobal from './MenuGlobal'
 import AppWindow from './AppWindow'
 import Grid from '@material-ui/core/Grid';
-import 'bootstrap'
+
 
 class App extends Component {
   render() {
@@ -11,11 +11,11 @@ class App extends Component {
 
 		<Grid container direction="column">
 
-			<Grid item style={{height:"24px", width:"100%"}}>
+			<Grid item style={{height:"24px", width:"100%", lineHeight: "1.5"}} >
 				<AppLogo />
 			</Grid>
 			
-			<Grid item style={{height:"24px", width:"100%"}} >
+			<Grid item style={{height:"24px", width:"100%", lineHeight: "1.5"}} >
 				<MenuGlobal />
 			</Grid>
 
