@@ -7,7 +7,7 @@ import ModalUploadFiles from './ModalUploadFiles';
 import Grid from '@material-ui/core/Grid';
 
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
+//import classNames from 'classnames';
 
 //import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
@@ -393,8 +393,14 @@ class AppWindow extends Component {
 					</Badge>
 					</IconButton>
 				</div>
+			</Grid>
+												
+        <ItemList items={this.state.items} 
+                  _setDirList={this.setDirList}
+								___setDelItem={this.setDelItem}	
+								___addToBundle={this.addToBundleFinal} />
 				
-				<ModalCreateDir openWindow={this.state.OpenModalCreateDir} 
+ 				<ModalCreateDir openWindow={this.state.OpenModalCreateDir} 
 								closeWindow={this.closeModalCreateDir} 
 								callbackMkDir={this.setDirList}	/>
 
@@ -411,16 +417,7 @@ class AppWindow extends Component {
 								  removeItemFromContent={this.removeFromBundle}
 								  closeWindow={()=>this.setState({ OpenModalPasteItems: false })}		
 								  items={this.state.itemsForCopyOrMove} />
-	
-			</Grid>
-				
-				<div className="ItemWindow"  >
-					<ItemList 	items={this.state.items} 
-								___setDirList={this.setDirList}
-								___setDelItem={this.setDelItem}	
-								___addToBundle={this.addToBundleFinal}/>
-				</div>
-				
+                  
 			</Grid>
 		);
 	}

@@ -4,18 +4,15 @@ export default class ItemName extends React.Component {
 
 render() {
 	const fontWeight = this.props.fontWeight
-	
-	if (fontWeight) 
-		return (
-			<div>
-				{this.props.name}
-			</div>
-		); 
-	else
-		return (	  
-			<div style={{ fontWeight: "bold" }} >
-				{this.props.name}
-			</div>
+
+  const Name = (fontWeight)
+                ? <div> {this.props.name}	</div> 
+                : <div style={{ fontWeight: "bold" }}> {this.props.name} </div> ;
+
+    return (
+          <>
+            {Name}
+          </>
 		);
   }
 }

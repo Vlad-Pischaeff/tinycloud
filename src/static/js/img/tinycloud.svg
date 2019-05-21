@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="220mm" height="43mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 22013.32 4334.92"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .str2 {stroke:white;stroke-width:340;stroke-miterlimit:23}
+    .str1 {stroke:white;stroke-width:340;stroke-linecap:round;stroke-miterlimit:23}
+    .str0 {stroke:white;stroke-width:340;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:23}
+    .fil0 {fill:none}
+   ]]>
+  </style>
+ </defs>
+ <g id="Layer_1">
+  <metadata id="Layer"/>
+  <path class="fil0 str0" d="M682.72 1160.31c0,598.25 0,1196.5 0,1794.75 9.92,168.48 121.26,320.23 320.79,320.23l357.19 0c185.2,0 299.87,-153.94 330.73,-297.06"/>
+  <line class="fil0 str1" x1="326.7" y1="1719.28" x2="1504.1" y2= "1719.28" />
+  <polyline class="fil0 str0" points="2985.78,1722.6 3492.89,1722.6 3492.89,3275.29 "/>
+  <line class="fil0 str0" x1="2968.14" y1="3275.29" x2="4008.84" y2= "3275.29" />
+  <polygon class="fil0 str0" points="3492.89,850.49 3303.28,850.5 3303.28,1031.3 3492.89,1031.29 "/>
+  <line class="fil0 str1" x1="5316.35" y1="1722.6" x2="5316.35" y2= "3275.29" />
+  <path class="fil0 str0" d="M5316.35 2153.55c229.58,-159.25 598.29,-430.95 712.19,-430.95l235.92 0c164.63,0 309.84,106.88 326.75,349.75l52.49 1202.94"/>
+  <polyline class="fil0 str0" points="7793.53,1722.6 7793.53,1957.28 8295.32,3129.53 8627.14,3129.1 "/>
+  <polyline class="fil0 str0" points="9123.08,1722.6 9123.08,1996.95 8252.73,3983.79 7793.53,3982.68 "/>
+  <path class="fil0 str0" d="M11609.12 1009.68l-639.42 0c-119.05,0 -216.75,87.95 -282.88,203.71l-374.74 763.71c-41.89,94.55 -28.22,305.15 11.47,366.61l372.75 749.59c55.5,101.46 171.62,181.99 288.85,181.99l628.38 0"/>
+  <polyline class="fil0 str0" points="12763.37,1009.68 12763.37,3275.28 14101.73,3275.29 "/>
+  <path class="fil0 str2" d="M16152.26 1168.45c-109.51,-216.1 -367.29,-222.97 -487.82,4.15l-371.43 740.91c-59.89,130.81 -75.24,301.52 -9.47,466.52l407.16 760.45c81.57,174.91 343.52,198.32 448.24,-8.2l393.66 -748.94c37.48,-80.47 84.89,-304.28 -9.92,-492.79l-370.42 -722.1z"/>
+  <path class="fil0 str0" d="M17727.57 1009.68l0 1970.12c0,122.75 126.4,295.49 328.52,295.49l663.67 0c174.92,0 332.94,-124.24 332.94,-328.57l0 -1937.04"/>
+  <path class="fil0 str0" d="M20213.6 1009.68l657.05 0c111.35,0 201.75,95.25 251.36,184.22l362.74 725.84c63.94,128.25 78.23,283.62 7.67,429.51l-384.11 765.65c-58.06,105.1 -145.42,160.39 -237.66,160.39l-679.1 0"/>
+  <line class="fil0 str2" x1="20547.64" y1="1009.68" x2="20547.64" y2= "3275.28" />
+ </g>
+</svg>

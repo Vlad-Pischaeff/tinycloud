@@ -19,7 +19,7 @@ class App extends Component {
 				<MenuGlobal />
 			</Grid>
 
-			<Grid item>
+			<Grid item item style={{height:"600px"}} >
 				<AppWindow />
 			</Grid>
 

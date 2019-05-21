@@ -1,16 +1,41 @@
 import React, { Component } from 'react';
+import ModalRenameFile from './ModalRenameFile';
+import ModalPlayVideo from './ModalPlayVideo';
 import Item from './Item'
 
 class ItemList extends Component {
 	constructor(props) {
-	 	super(props);
-		this.state = { 
+		super(props);
+		this.state = {
+      OpenModalRenameFile: false,
+      OpenModalPlayVideo: false,
+      name: "",
+      str:"",  
 		};
 	}
+  
+  openModalRenameFile  = (e) => {
+		this.setState({ OpenModalRenameFile: true });
+    this.setState({ name: e});
+  }
+  
+  closeModalRenameFile = (e) => {
+		this.setState({ OpenModalRenameFile: false });
+  }
+
+	closeModalPlayVideo = (e) => {
+		this.setState({ OpenModalPlayVideo: false });
+  }
 	
-//transit: forms content of new directory from Item to AppWindow
+  playVideo = (url, name) => {
+    this.setState({ name: url });
+		this.setState({ str: name });
+    this.setState({ OpenModalPlayVideo: true });
+  }
+  
+//transit: forms content of new directory from ModalRenameFile to AppWindow
 	__setDirList = (data) => {
-		this.props.___setDirList(data);
+		this.props._setDirList(data);
 	}
 	
 //transit: forms lists for delete from Item to AppWindow 
@@ -33,18 +58,23 @@ class ItemList extends Component {
 			return a.type == 'file' ? 1 : -1;
     });
 
-	const dirElements = sortItems.map((n, i) => 
-									<li>
-										<Item 	keyItem={i} 
-												file={n} 
-												_setDelItem={this.__setDelItem} 
-												_setDirList={this.__setDirList} 
-												_addToBundle={this.__addToBundle} />
-									</li>);
+	const dirElements = sortItems.map((n, i) => <Item 	keyItem={i} file={n} 
+                                                      _setDelItem={this.__setDelItem} 
+                                                      _setDirList={this.__setDirList} 
+                                                      _addToBundle={this.__addToBundle}
+                                                      _playVideo={this.playVideo}
+                                                      _openModalRenameFile={this.openModalRenameFile} /> );
 	return (
-		<ol>
-			{dirElements}
-		</ol>
+    <>
+      {dirElements}
+    
+      <ModalRenameFile openWindow={this.state.OpenModalRenameFile} filename={this.state.name}
+                       closeWindow={this.closeModalRenameFile}  
+                       ___setDirList={this.__setDirList} />
+                       
+      <ModalPlayVideo  openWindow={this.state.OpenModalPlayVideo} filename={this.state.name} str={this.state.str}
+                       closeWindow={this.closeModalPlayVideo} />
+    </>
 	);
 
 	}

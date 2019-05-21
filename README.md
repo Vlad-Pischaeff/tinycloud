@@ -10,6 +10,8 @@ At present it is possible to:
 	<li>Rename File or Directory
 	<li>Copy File or Directory
 	<li>Move File or Directory
+	<li>Play .mp4 files
+	<li>View .pdf or .txt files
 </ul>
 <p>
 <h2>Easy starting</h2>

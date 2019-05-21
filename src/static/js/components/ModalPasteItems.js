@@ -1,5 +1,4 @@
 import React from 'react';
-
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -53,30 +52,28 @@ export default class ModalPasteItems extends React.Component {
 				</div>
 				);
 						
-		return (
+	return (
 		
-        <Dialog open={this.props.openWindow}
-				onClose={this.handleClose}
-				aria-labelledby="form-dialog">
+    <Dialog open={this.props.openWindow} onClose={this.handleClose}	aria-labelledby="form-dialog">
 
 			<DialogTitle id="form-dialog-title">Pasting listed items&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			    <IconButton aria-label="Close" style={{position: 'absolute', right: "4px", top: "4px"}} 
-				            onClick={this.handleClose} >
+			  <IconButton aria-label="Close" style={{position: 'absolute', right: "4px", top: "4px"}} 
+                    onClick={this.handleClose} >
 					<CloseIcon />
 				</IconButton>
 			</DialogTitle>
 
 			<DialogContent>
-			
 				{pasteElements}
-				
 			</DialogContent>
+      
 			<DialogActions>
 				<Button onClick={this.handleClear} color="primary">
 					Clear
 				</Button>
 			</DialogActions>
-        </Dialog>
+      
+    </Dialog>
 		
 		);
 	}

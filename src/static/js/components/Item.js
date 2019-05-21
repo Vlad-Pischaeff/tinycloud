@@ -1,36 +1,27 @@
 import React, { Component } from 'react';
 import Grid from '@material-ui/core/Grid';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputBase from '@material-ui/core/InputBase';
-import TextField from '@material-ui/core/TextField';
 import ListItem from '@material-ui/core/ListItem';
-import Checkbox from '@material-ui/core/Checkbox';
 import ListItemText from '@material-ui/core/ListItemText';
-import Avatar from '@material-ui/core/Avatar';
-import WorkIcon from '@material-ui/icons/Work';
+import Checkbox from '@material-ui/core/Checkbox';
 import Edit from '@material-ui/icons/Edit'
-import Description from '@material-ui/icons/Description';
-import { sizing } from '@material-ui/system';
-import { palette } from '@material-ui/system';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Fab from '@material-ui/core/Fab';
 import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
-import ModalRenameFile from './ModalRenameFile';
-import ModalPlayVideo from './ModalPlayVideo';
 import ItemName from './ItemName';
 
 const styles = theme => ({
-  input: {
-    width: '20%',
+  button: {
+    width: "40px", 
+    minWidth: "0",
   },
-  // Separate this part into it's own CSS class
-  inputFocused: {
-    width: '40%',
-    backgroundColor: "#3f50b5",
-	color: "#ffffff",
+  image24: {
+    width: "24px", 
+    height: "24px",
+  },
+  image48: {
+    width: "48px", 
+    height: "48px",
   },
 });
 
@@ -38,9 +29,6 @@ var $ = require('jquery');
 
 class Item extends Component {
 	state = {
-		OpenModalRenameFile: false,
-		OpenModalPlayVideo: false,
-		changeColor: false,
 		showButtons: true,
 		name: "",
 		str: "",
@@ -50,7 +38,7 @@ class Item extends Component {
 		$.get(window.location.href + 'cd', 
 			{ "dir": event },
     		(data) => {
-				this.props._setDirList(data);
+          this.props._setDirList(data);
 			});
 	}
 
@@ -97,10 +85,7 @@ class Item extends Component {
 					a.style = "display: none";
 					document.body.appendChild(a);
 					let url = window.URL.createObjectURL(blob);
-					this.setState({ name: url });
-					this.setState({ str: name });
-					//setTimeout(() => {this.refs.vidRef.play();}, 100);
-					this.openModalPlayVideo();
+          this.props._playVideo(url, name);
 				};
 				let data = JSON.stringify({ "item" : name });
 				xhr.send(data);
@@ -119,151 +104,73 @@ class Item extends Component {
 		this.setState({ showButtons: true });
 	};
 	
-	openModalRenameFile  = (e) => {
-		this.setState({ OpenModalRenameFile: true });
-    }
-	
-	closeModalRenameFile = (e) => {
-		this.setState({ OpenModalRenameFile: false });
-		this.setState({ showButtons: true });
-    }
-
-	openModalPlayVideo  = (e) => {
-		this.setState({ OpenModalPlayVideo: true });
-    }
-	
-	closeModalPlayVideo = (e) => {
-		this.setState({ OpenModalPlayVideo: false });
-		this.setState({ showButtons: true });
-    }
-	
-	setDirList = (data) => {
-		this.props._setDirList(data);
-	}
-	
 	addToBundle = (name, type, act) => {
 		this.props._addToBundle(name, type, act);
-//		console.log("onClick--", name, type, op);
 	}
 	
 	render() {
 	const {classes} = this.props;
 	const {file} = this.props
 	const keyItem = this.props.keyItem
-//	console.log("props=", this.props.classes);
-
-	if (file.type =='dir') 
-	  return (
-		<ListItem button onMouseEnter={this.handleOnMouseEnter} onMouseLeave={this.handleOnMouseLeave} 
-				  style={{paddingTop: "0", paddingBottom: "0" }} >
-			<Grid container direction="row">
-				<Grid item style={{width:"5%"}}>
-					<Checkbox tabIndex={-1} height={10} 
-						disableRipple 
-						onChange={()=>this.setDelItem(file.name, keyItem, file.checked, file.type)} 
-						checked={file.checked}/>
-				</Grid>
-				
-				<Grid item style={{width:"65%"}}>
-				<ListItem id="myDir" onClick={(e) => this.openDir(this.replaceSpace(file.name))} >
-					<Avatar>
-						<WorkIcon />
-					</Avatar>
-					<ListItemText 	primary={<ItemName name={file.name} fontWeight={this.state.showButtons} />} 
+  const FileOrDir = (file.type == 'dir') 
+      ?	<ListItem id="myDir" onClick={(e) => this.openDir(this.replaceSpace(file.name))} 
+                  style={{ paddingTop:"0", paddingBottom:"0" }} >
+					<img src={require('../img/Folder-blue.svg')} className={classes.image48} />
+					<ListItemText primary={<ItemName name={file.name} fontWeight={this.state.showButtons} />} 
 									secondary={file.date} style={{width:"100%"}} />
-				</ListItem>
-				</Grid>
-				
-				<Grid item style={{width:"30%"}}>
-					<Tooltip title="Edit Name of Item">
-					<Button style={{width:"40px", minWidth:"0"}} size="small" variant="outlined" color="primary" className={classes.button} 
-						onClick={this.openModalRenameFile} hidden={this.state.showButtons} >
-						<Edit />
-					</Button>
-					</Tooltip> 
+				</ListItem>    
 
-					<Tooltip title="Copy Item">
-					<Button style={{width:"40px", minWidth:"0"}} size="small" variant="outlined" color="primary" className={classes.button} 
-						onClick={()=>this.addToBundle(file.name, file.type, 'copy')} hidden={this.state.showButtons} >
-						<img src={require('../img/copy1.svg')} style={{width:"24px", height:"24px"}} />
-					</Button>
-					</Tooltip> 
-					
-					<Tooltip title="Move Item">
-					<Button style={{width:"40px", minWidth:"0"}} size="small" variant="outlined" color="primary" className={classes.button} 
-						onClick={()=>this.addToBundle(file.name, file.type, 'move')} hidden={this.state.showButtons} >
-						<img src={require('../img/cut1.svg')} style={{width:"24px", height:"24px"}} />
-					</Button>
-					</Tooltip> 
-				</Grid>
-				
-				<ModalRenameFile openWindow={this.state.OpenModalRenameFile} filename={file.name}
-							 closeWindow={this.closeModalRenameFile} 
-							 callbackRenameItem={this.setDirList} />
-
-			</Grid>
-		</ListItem>
-	  );
-	else 
-		return (
-		<ListItem button onMouseEnter={this.handleOnMouseEnter} onMouseLeave={this.handleOnMouseLeave} 
-				  style={{paddingTop: "0", paddingBottom: "0" }} >
-			<Grid container direction="row">
-
-				<Grid item style={{width:"5%"}}>
-					<Checkbox tabIndex={-1} 
-						disableRipple 
-						onChange={()=>this.setDelItem(file.name, keyItem, file.checked, file.type)} 
-						checked={file.checked}/>
-				</Grid>
-
-				<Grid item style={{width:"65%"}}>
-				<ListItem id="myFile" 	onClick={(e)=>this.handleClickItem(e, file.name)} 
-										onContextMenu={(e)=>this.handleClickItem(e, file.name)}>
-					<Avatar>
-						<Description />
-					</Avatar>
+			:	<ListItem id="myFile" 	onClick={(e)=>this.handleClickItem(e, file.name)} 
+									onContextMenu={(e)=>this.handleClickItem(e, file.name)}
+                  style={{ paddingTop:"0", paddingBottom:"0" }}>
+          <img src={require('../img/App-generic.svg')} className={classes.image48} />
 					<ListItemText primary={<ItemName name={file.name} fontWeight={this.state.showButtons} />} 
 								  secondary={file.date + "   Size: " + file.size} 
 								  style={{width:"100%"}} />
-				</ListItem>
-				</Grid>
+				</ListItem> ;    
 
+	return (
+
+		<ListItem button onMouseEnter={this.handleOnMouseEnter} onMouseLeave={this.handleOnMouseLeave} 
+				  style={{paddingTop: "0", paddingBottom: "0" }} >
+			<Grid container direction="row">
+				<Grid item style={{width:"5%", display:"flex"}} >
+					<Checkbox tabIndex={-1} height={10} style={{margin:"auto"}}
+						disableRipple 
+						onChange={()=>this.setDelItem(file.name, keyItem, file.checked, file.type)} 
+						checked={file.checked}/>
+				</Grid>
+				
+				<Grid item style={{width:"65%"}}>
+          {FileOrDir}
+				</Grid>
+				
 				<Grid item style={{width:"30%"}}>
-					<Tooltip title="Edit Name of Item">
-					<Button style={{width:"40px", minWidth:"0"}} size="small" variant="outlined" color="primary" className={classes.button} 
-						onClick={this.openModalRenameFile} hidden={this.state.showButtons}>
+					<Tooltip title="Rename Item" placement="top">
+					<Button className={classes.button} size="small" variant="outlined" color="primary"
+						onClick={()=>this.props._openModalRenameFile(file.name)} hidden={this.state.showButtons} >
 						<Edit />
 					</Button>
 					</Tooltip> 
 
-					<Tooltip title="Copy Item">
-					<Button style={{width:"40px", minWidth:"0"}} size="small" variant="outlined" color="primary" className={classes.button} 
+					<Tooltip title="Copy Item" placement="top">
+					<Button className={classes.button} size="small" variant="outlined" color="primary"
 						onClick={()=>this.addToBundle(file.name, file.type, 'copy')} hidden={this.state.showButtons} >
-						<img src={require('../img/copy1.svg')} style={{width:"24px", height:"24px"}} />
+						<img src={require('../img/copy1.svg')} className={classes.image24} />
 					</Button>
-					</Tooltip>
+					</Tooltip> 
 					
-					<Tooltip title="Move Item">
-					<Button style={{width:"40px", minWidth:"0"}} size="small" variant="outlined" color="primary" className={classes.button} 
+					<Tooltip title="Move Item" placement="top">
+					<Button className={classes.button} size="small" variant="outlined" color="primary"
 						onClick={()=>this.addToBundle(file.name, file.type, 'move')} hidden={this.state.showButtons} >
-						<img src={require('../img/cut1.svg')} style={{width:"24px", height:"24px"}} />
+						<img src={require('../img/cut1.svg')} className={classes.image24} />
 					</Button>
-					</Tooltip> 					
+					</Tooltip> 
 				</Grid>
-
 			</Grid>
-
-			<ModalRenameFile openWindow={this.state.OpenModalRenameFile} filename={file.name}
-							 closeWindow={this.closeModalRenameFile} 
-							 callbackRenameItem={this.setDirList} />
-							 
-			<ModalPlayVideo  openWindow={this.state.OpenModalPlayVideo} filename={this.state.name} str={this.state.str}
-							 closeWindow={this.closeModalPlayVideo} />
-							 
 		</ListItem>
-						
-		);
+         
+	  );
 	}
 }
 

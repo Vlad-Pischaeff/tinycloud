@@ -12,33 +12,33 @@ var $ = require('jquery');
 export default class ModalRenameFile extends React.Component {
 
   state = {
-	name:"",
+    name:"",
   };
 
   handleCloseCancel = () => {
-	this.props.closeWindow();
-    this.setState({ name: "" });
+    this.props.closeWindow();
+      this.setState({ name: "" });
   };
 
   handleCloseOK = () => {
-	this.props.closeWindow();
+    this.props.closeWindow();
 		$.get(window.location.href + 'rename', 
 			{ "newname": this.state.name,
 			  "oldname": this.props.filename },
     		(data) => {
-				this.props.callbackRenameItem(data);
+          this.props.___setDirList(data);
 			});
     this.setState({ name: "" });
   };
 
   handleKeyPress = (e) => {
-	if (e.key === 'Enter') {
-		this.handleCloseOK();
-	}
+    if (e.key === 'Enter') {
+      this.handleCloseOK();
+    }
   }
   
   handleEnter = () => {
-	this.setState({ name: this.props.filename });
+    this.setState({ name: this.props.filename });
   }
   
   render() {
@@ -46,23 +46,23 @@ export default class ModalRenameFile extends React.Component {
 
         <Dialog style={{width:"100%"}}
           open={this.props.openWindow}
-		  onEnter={this.handleEnter}
+          onEnter={this.handleEnter}
           onClose={this.handleCloseCancel}
           aria-labelledby="form-dialog-title">
           <DialogTitle id="form-dialog-title">Edit File name</DialogTitle>
           <DialogContent>
             <DialogContentText>
-				Change name of your file <b>{this.props.filename}</b>                                   
+              Change name of your file <b>{this.props.filename}</b>                                   
             </DialogContentText>
             <TextField
-				autoFocus
-				margin="dense"
-				id="newFileName"
-				type="text"
-				fullWidth
-				value={this.state.name}
- 				onChange={e => this.setState({ name: e.target.value })}
-				onKeyPress={this.handleKeyPress}
+              autoFocus
+              margin="dense"
+              id="newFileName"
+              type="text"
+              fullWidth
+              value={this.state.name}
+              onChange={e => this.setState({ name: e.target.value })}
+              onKeyPress={this.handleKeyPress}
             />
           </DialogContent>
           <DialogActions>
