@@ -158,10 +158,14 @@ def fileUpload():
     filename = file.filename
 #    filename = secure_filename(file.filename)
     destination="/".join([target, filename])
-    logger.info("welcome to upload - %s" % filename)
-    file.save(destination)
+#    print("welcome to upload - %s, %s" % (destination, filename))
+#    file.save(destination)
+    file.save(os.path.join(target, filename))
+    print("session - %s" % session)
     session['uploadFilePath']=destination
-    data={"Pischaeff": filename}
+    print("session - %s" % session)
+    data={"Uploaded": filename}
+    print("data - %s" % data)
     js = json.dumps(data)
     resp = Response(js, status=200, mimetype='application/json')
     return resp

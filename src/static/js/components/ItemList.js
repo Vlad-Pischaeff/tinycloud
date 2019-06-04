@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
 import ModalRenameFile from './ModalRenameFile';
 import ModalPlayVideo from './ModalPlayVideo';
+import { List, AutoSizer } from 'react-virtualized';
 import Item from './Item'
-
+	
 class ItemList extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-      OpenModalRenameFile: false,
-      OpenModalPlayVideo: false,
-      name: "",
-      str:"",  
-		};
-	}
+
+	state = {
+    OpenModalRenameFile: false,
+    OpenModalPlayVideo: false,
+    name: "",
+    str:"",  
+	};
   
   openModalRenameFile  = (e) => {
 		this.setState({ OpenModalRenameFile: true });
@@ -47,27 +46,40 @@ class ItemList extends Component {
 		this.props.___addToBundle(name, type, act);
 	}
 	
+  
 	render() {
 	
 	const {items} = this.props
-
-	const sortItems = items.sort( function(a, b) {
-		if (a.type == b.type)
-			return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
-		else
-			return a.type == 'file' ? 1 : -1;
-    });
-
-	const dirElements = sortItems.map((n, i) => <Item 	keyItem={i} file={n} 
-                                                      _setDelItem={this.__setDelItem} 
-                                                      _setDirList={this.__setDirList} 
-                                                      _addToBundle={this.__addToBundle}
-                                                      _playVideo={this.playVideo}
-                                                      _openModalRenameFile={this.openModalRenameFile} /> );
+//  console.log("update ListItem", items);
+  const renderRow = ({index, isScrolling, key, style}) => {
+//    console.log("update renderRow", this.props.items);
+    return (
+      <div key={key} style={style}>
+        <Item keyItem={index} file={items[index]} _setDelItem={this.__setDelItem} 
+                                                  _setDirList={this.__setDirList} 
+                                                  _addToBundle={this.__addToBundle}
+                                                  _playVideo={this.playVideo}
+                                                  _openModalRenameFile={this.openModalRenameFile}/>
+      </div>
+    );
+  }
+  
 	return (
     <>
-      {dirElements}
-    
+      <AutoSizer> 
+      {
+        ({ width, height }) => {
+          return <List
+            rowCount={items.length}
+            width={width}
+            height={height}
+            rowHeight={48}
+            rowRenderer={renderRow}
+          />
+        }
+      }
+      </AutoSizer>
+      
       <ModalRenameFile openWindow={this.state.OpenModalRenameFile} filename={this.state.name}
                        closeWindow={this.closeModalRenameFile}  
                        ___setDirList={this.__setDirList} />

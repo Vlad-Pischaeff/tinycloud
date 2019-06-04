@@ -5,6 +5,7 @@ import ModalRemoveItem from './ModalRemoveItem';
 import ModalPasteItems from './ModalPasteItems';
 import ModalUploadFiles from './ModalUploadFiles';
 import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 
 import PropTypes from 'prop-types';
 //import classNames from 'classnames';
@@ -30,6 +31,10 @@ var $ = require('jquery');
 const styles = theme => ({
   button: {
     margin: theme.spacing.unit,
+    fontSize: "1em",
+    color: "grey",
+    backgroundColor: "white",
+    border: "1px solid grey",
   },
   leftIcon: {
     marginRight: theme.spacing.unit,
@@ -40,7 +45,23 @@ const styles = theme => ({
   iconSmall: {
     fontSize: 20,
   },
+  paper:{
+    width: '100%', 
+    height: '70vh',
+  },
 });
+
+const LightTooltip = withStyles(theme => ({
+  tooltip: {
+    backgroundColor: theme.palette.common.white,
+    color: 'rgba(0, 0, 0, 0.87)',
+    boxShadow: theme.shadows[1],
+    fontSize: 12,
+    position: 'absolute', 
+    right: '-2em', 
+    top: '-7.5em',
+  },
+}))(Tooltip);
 
 class AppWindow extends Component {
 	
@@ -57,10 +78,13 @@ class AppWindow extends Component {
 						uploadState: {},
 						itemsForCopyOrMove: [],
 						};
-		this.getBackList = this.getBackList.bind(this);
 
-		document.addEventListener('DOMContentLoaded', this.getDirList);
+		//document.addEventListener('DOMContentLoaded', this.getDirList);
 	}
+  
+  componentWillMount() {
+    this.getHomeList();
+  }
 
 	replaceSpace(str) {
 		return str.replace( /\s/g, "%20" );
@@ -84,20 +108,20 @@ class AppWindow extends Component {
 		this.setState({ dirChecked: {}, filesChecked: {}});
 	}
 
-	getBackList() {
+	getBackList = () => {
   	$.get(window.location.href + 'back', (data) => {
 			this.setState({items: data});
 		});
 		this.setState({ dirChecked: {}, filesChecked: {}});
 	}
 	
-	isNotEmpty(obj){
+	isNotEmpty(obj) {
 		for (var key in obj)
 			return true;
 		return false;
 	}
 	
-	buttonDisabled(){
+	buttonDisabled() {
 		if (!this.isNotEmpty(this.state.filesChecked))
 			if (!this.isNotEmpty(this.state.dirChecked))
 				return true;
@@ -136,13 +160,13 @@ class AppWindow extends Component {
 			var obj = this.state.dirChecked;
 			(c) ? obj[i] = data : delete obj[i];
 			this.setState({dirChecked: obj});
-			console.log("dir=", this.state.dirChecked, obj, c, t, i);
+//			console.log("dir=", this.state.dirChecked, obj, c, t, i);
 		}
 		else {
 			var obj = this.state.filesChecked;
 			(c) ? obj[i] = data : delete obj[i];
 			this.setState({filesChecked: obj});
-			console.log("file=", this.state.filesChecked, obj, c, t, i);
+//			console.log("file=", this.state.filesChecked, obj, c, t, i);
 		}
 	}
 	
@@ -232,8 +256,12 @@ class AppWindow extends Component {
 			console.error(xhr.statusText);
 		};
 		xhr.upload.onprogress = (event) => {
-			obj[file] = ~~((+event.loaded / +event.total) * 100);
-			this.setState({ uploadState: obj});
+      let i = obj[file] || 0;
+      let p = ~~((+event.loaded / +event.total) * 100);
+      if (i < p) {
+        obj[file] = p;
+        this.setState({ uploadState: obj});
+      }
 		}
 		xhr.send(data);
 	}
@@ -332,58 +360,63 @@ class AppWindow extends Component {
 	
 	render() {
 	const { classes } = this.props;
-
+  const sortItems = this.state.items.sort((a, b) => {
+		if (a.type == b.type)
+			return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
+		else
+			return a.type == 'file' ? 1 : -1;
+  });
+  
 		return (
-		  
+		<>  
 			<Grid container direction="column">
 			<Grid container direction="row">
 				<div className="Header" style={{width:"90%"}}>
-				<Tooltip title="Home">
+				<LightTooltip title="Home" >
 					<Fab size="small" variant="contained" color="primary" className={classes.button} 
-						onClick={this.getHomeList}>
+               onClick={this.getHomeList}>
 						<Home />
 					</Fab>
-				</Tooltip >
+				</LightTooltip >
 
-				<Tooltip title="Back">
+				<LightTooltip title="Back">
 					<Fab size="small" variant="contained" color="primary" className={classes.button} 
-						onClick={this.getBackList}>
+               onClick={this.getBackList}>
 						<Undo />
 					</Fab>
-				</Tooltip >
+				</LightTooltip >
 
-				<Tooltip title="Create Directory">
+				<LightTooltip title="Create Directory" >
 					<Fab size="small" variant="contained" color="primary" className={classes.button} 
-						onClick={this.openModalCreateDir}>
+               onClick={this.openModalCreateDir}>
 						<CreateNewFolder />
 					</Fab>
-				</Tooltip >
+				</LightTooltip >
 				
-				<Tooltip title="Upload File">
+				<LightTooltip title="Upload File" >
 					<Fab size="small" variant="contained" color="primary" className={classes.button}
-						component="label">
+               component="label">
 						<CloudUpload />
-						<input 	type="file" multiple
-								style={{ display: "none" }}
-								onChange={(e)=>{this.uploadFile(e.currentTarget)}}/>
+						<input type="file" multiple style={{ display: "none" }}
+                   onChange={(e)=>{this.uploadFile(e.currentTarget)}}/>
 					</Fab>
-				</Tooltip >
+				</LightTooltip >
 				
-				<Tooltip title="Download File">
+				<LightTooltip title="Download File" >
 					<Fab size="small" variant="contained" color="primary" className={classes.button}
-						component="label" onClick={this.downloadItem}
-						disabled={this.buttonDisabled()} >
+               component="label" onClick={this.downloadItem}
+               disabled={this.buttonDisabled()} >
 						<CloudDownload />
 					</Fab>
-				</Tooltip >
+				</LightTooltip >
 
-				<Tooltip title="Delete Item">
+				<LightTooltip title="Delete Item" >
 					<Fab size="small" variant="contained" color="secondary" className={classes.button} 
-						onClick={this.openModalRemoveItem} 
-						disabled={this.buttonDisabled()} >
+               onClick={this.openModalRemoveItem} 
+               disabled={this.buttonDisabled()} >
 						<Delete />
 					</Fab>
-				</Tooltip >
+				</LightTooltip >
 				</div>
 				
 				<div className="HeaderLeft" style={{width:"10%"}}>
@@ -394,12 +427,22 @@ class AppWindow extends Component {
 					</IconButton>
 				</div>
 			</Grid>
-												
-        <ItemList items={this.state.items} 
-                  _setDirList={this.setDirList}
-								___setDelItem={this.setDelItem}	
-								___addToBundle={this.addToBundleFinal} />
-				
+      
+			<Grid container direction="row">
+        <Grid item style={{width:"20%"}} >
+          <Paper square={true} className={classes.paper} >
+          </Paper>
+        </Grid>
+        <Grid item style={{width:"80%"}} >
+          <Paper square={true} className={classes.paper} >
+            <ItemList items={sortItems} _setDirList={this.setDirList}
+                                        ___setDelItem={this.setDelItem}	
+                                        ___addToBundle={this.addToBundleFinal} />
+          </Paper>
+				</Grid>
+      </Grid>  
+    </Grid>
+    
  				<ModalCreateDir openWindow={this.state.OpenModalCreateDir} 
 								closeWindow={this.closeModalCreateDir} 
 								callbackMkDir={this.setDirList}	/>
@@ -417,8 +460,8 @@ class AppWindow extends Component {
 								  removeItemFromContent={this.removeFromBundle}
 								  closeWindow={()=>this.setState({ OpenModalPasteItems: false })}		
 								  items={this.state.itemsForCopyOrMove} />
-                  
-			</Grid>
+    </>              
+			
 		);
 	}
 }
