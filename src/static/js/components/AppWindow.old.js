@@ -28,8 +28,6 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 
 var $ = require('jquery');
 
-const BUFFER = 4 * 1024 * 1024;
-
 const styles = theme => ({
   button: {
     margin: theme.spacing.unit,
@@ -78,7 +76,6 @@ class AppWindow extends Component {
 						dirChecked: {},
 						filesChecked: {},
 						uploadState: {},
-            uploadChunkState: {},
 						itemsForCopyOrMove: [],
 						};
 
@@ -207,104 +204,66 @@ class AppWindow extends Component {
 		let data = await response.json();
 		console.log("async data--", data);
 	}*/
-		
-  escapeUnicode(str) {
-    return str.replace(/[^\0-~]/g, function(ch) {
-        return "\\u" + ("000" + ch.charCodeAt().toString(16)).slice(-4);
-    });
-  }
-  
+	
 	uploadFile = (file) => {
 		this.setState({OpenModalUploadFiles: !this.state.OpenModalUploadFiles});
-//		const data = new FormData();
+		const data = new FormData();
 		for (var i = 0; i < file.files.length; i++) {
-//			data.append('file', file.files[i]);
-//      data.append('filename', file.files[i]['name']);
-//      console.log('file--', file.files[i]);
-//			this.chkFormData(data);
-			this.getPost(file.files[i]);
+			data.set('file', file.files[i]);
+			this.chkFormData(data);
+			this.getPostXHR(data, file.files[i]['name'] );
 		}
 	}
 	
-	getPost = (file) => {
-    let LENGTH = file['size']/BUFFER;
-    let filename = file['name'];
-    let chunk = null;
-    let last_chunk = false; 
-    let i = this.state.uploadChunkState[filename] || 0;
-    let start = (i * BUFFER);
-    let end = ((i + 1) * BUFFER);
-    
-    chunk = file.slice(start, end);
-    if (end > file['size']) {
-        last_chunk = true;
-    }
-      
-    console.log('i--', i, LENGTH, end, file['size'], last_chunk, this.state.uploadChunkState[filename]);
-    this.getPostXHR(file, chunk, i, last_chunk);
+	getPost = (data) => {
+		fetch('/upload', { method: 'POST', body: data, })
+			.then((response) => {
+				if (response.ok) {
+					response.json()
+						.then((data) => {
+							console.log("data--", data);
+							this.getDirList();	
+						});
+				}
+				else console.log("Some error occured...");
+				console.log("response--", response);
+			});	
 	}
 	
-  getPostXHR = (file, chunk, index, last_chunk) => {
-    let filename = file['name'];
-    let obj = this.state.uploadState;
-    let cnk = this.state.uploadChunkState;
-    console.log('Chunk--', this.state.uploadChunkState[filename]);
-		let xhr = new XMLHttpRequest();
-//		let status = false;
+	getPostXHR = (data, file) => {
+		var obj = this.state.uploadState;
+		var xhr = new XMLHttpRequest();
+		var status = false;
 		xhr.open("POST", "/upload", true);
-    
-    xhr.setRequestHeader('Content-Name', this.escapeUnicode(file['name']));
-    xhr.setRequestHeader('Content-Size', file['size']);
-    xhr.setRequestHeader('Chunk-Number', index);
-    xhr.setRequestHeader('Chunk-Last', last_chunk);
-    xhr.responseType = "json";
-
 		xhr.onload = (e) => {
 			if (xhr.readyState === 4) {
 				if (xhr.status === 200) {
-					//if (!this.isNotEmpty(this.state.uploadState))
-					console.log("OnLoad --", xhr.response['filename'], xhr.response['chunk']);
-					//status = true;
-        } else {
-					console.log('OnLoadError--', xhr.statusText);
+
+					delete this.state.uploadState[file];
+
+					if (!this.isNotEmpty(this.state.uploadState))
+						this.setState({OpenModalUploadFiles: false});
+
+					this.getDirList();
+					console.log("Uploaded file--", file, this.state.items);
+					status = true;
+				} else {
+					console.error(xhr.statusText);
 				}
 			}
-      console.log('Load--', xhr.statusText);
 		};
-
-    xhr.onloadend = (e) => {
-      console.log('OnLoaded--', xhr.statusText, last_chunk, this.state.uploadState);
-      if ((xhr.statusText == 'OK') && ( last_chunk == true )) {
-        delete this.state.uploadState[filename];
-        delete this.state.uploadChunkState[filename];
-        if (!this.isNotEmpty(this.state.uploadState)) {
-          this.setState({OpenModalUploadFiles: false});
-          this.getDirList();
-        }
-      }
-      else {
-        if (xhr.response['filename'] == filename) {
-          cnk[filename] = +xhr.response['chunk'] + 1;
-          this.setState({ uploadChunkState: cnk }, () => (this.getPost(file)));
-        }
-      }
-    }
-
 		xhr.onerror = (e) => {
-			console.log('OnError--', xhr.statusText);
+			console.error(xhr.statusText);
 		};
-
 		xhr.upload.onprogress = (event) => {
-      let n = this.state.uploadChunkState[filename] || 0;
-      let i = obj[filename] || 0;
-      let p = ~~(((+event.loaded + (n * BUFFER)) / +file['size']) * 100);
+      let i = obj[file] || 0;
+      let p = ~~((+event.loaded / +event.total) * 100);
       if (i < p) {
-        obj[filename] = p;
+        obj[file] = p;
         this.setState({ uploadState: obj});
       }
 		}
-
-    xhr.send(chunk);
+		xhr.send(data);
 	}
   
 	chkFormData = (data) => {

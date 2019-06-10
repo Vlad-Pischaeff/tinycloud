@@ -1,5 +1,5 @@
 #c:/python/python37
-from flask import Flask, render_template, jsonify, request, session, Response, make_response
+from flask import Flask, render_template, jsonify, request, session, Response
 from flask import send_file
 from datetime import datetime
 import time
@@ -154,44 +154,20 @@ def fileUpload():
        os.mkdir(target)
     global curr_dir 
     curr_dir = target
-#    file = request.files['file'] 
-#    filename = file.filename
-    chunk = request.headers.get('Chunk-Number')
-    chunk_last = request.headers.get('Chunk-Last')
-    file_size = request.headers.get('Content-Size')
-    filename = request.headers.get('Content-Name').encode('ascii').decode('unicode-escape')
-    print("filename - %s" % filename)
-    bytes_left = int(request.headers.get('content-length'))
+    file = request.files['file'] 
+    filename = file.filename
 #    filename = secure_filename(file.filename)
     destination="/".join([target, filename])
-
+#    print("welcome to upload - %s, %s" % (destination, filename))
 #    file.save(destination)
-#    file.save(os.path.join(target, filename))
-#    print("session - %s" % session)
-#    stream = request.stream
-    with open(destination, 'ab+') as f:
-      BUFFER = 1048576
-      b = request.get_data()
-      f.write(b)
-      if chunk_last == "true":
-        f.close()
-#      while b:
-#        f.write(b)
-#        b = request.get_data()
-#      while bytes_left > 0:
-#        chunk = file.stream.read(chunk_size)
-#        f.write(chunk)
-#        bytes_left -= len(chunk)
-#        print('bytes_left = %s ' % bytes_left)
-#      return make_response('Upload Complete', 200)
-#      f.write(request.get_data())
-#    session['uploadFilePath']=destination
-#    print("session - %s" % session)
-    data={"filename":filename, "chunk":chunk}
-#    print("data - %s" % data)
+    file.save(os.path.join(target, filename))
+    print("session - %s" % session)
+    session['uploadFilePath']=destination
+    print("session - %s" % session)
+    data={"Uploaded": filename}
+    print("data - %s" % data)
     js = json.dumps(data)
     resp = Response(js, status=200, mimetype='application/json')
-#    res = make_response(jsonify({"filename":filename, "chunk":chunk }), 200)
     return resp
 
 @app.route("/rename", methods=["GET", "POST"])
