@@ -31,6 +31,8 @@ directory = data["directory"]
 os.chdir(directory)
 curr_dir = directory
 home_dir = directory
+CURR_DIR = directory
+HOME_DIR = directory
 f.close()
 
 app = Flask(__name__, static_folder="./static/dist", template_folder="../public")
@@ -60,7 +62,7 @@ def lsDir(dir):
        d = { "checked": bool(), "type": "dir", "name": entry.name, "date": df }
     if entry.is_file():
        filesize  = os.stat(entry.name).st_size
-       d = { "checked": bool(), "type": "file", "name": entry.name, "date": df, "size": KMGTbytes(filesize) }
+       d = { "checked": bool(), "type": "file", "name": entry.name, "date": df, "size": KMGTbytes(filesize), "rawsize": filesize }
     m.append(d)
   return jsonify(m)
 #  return json.dumps(m)
@@ -75,13 +77,14 @@ def hello():
 
 @app.route("/ls", methods=["GET", "POST"])
 def ls():
-    return lsDir(curr_dir)
+    return lsDir(CURR_DIR)
 
 @app.route("/cd", methods=["GET", "POST"])
 def cd():
-    curr_dir = os.getcwd() + '/' + request.args['dir']
-    os.chdir(replacer(curr_dir))
-    return lsDir(curr_dir)
+    global CURR_DIR
+    CURR_DIR = CURR_DIR + '/' + request.args['dir']
+    os.chdir(replacer(CURR_DIR))
+    return lsDir(CURR_DIR)
 
 @app.route("/pwd", methods=["GET", "POST"])
 def pwd():
@@ -89,39 +92,39 @@ def pwd():
 
 @app.route("/home", methods=["GET", "POST"])
 def home():
-    os.chdir(replacer(home_dir))
-    return lsDir(home_dir)
+    global CURR_DIR
+    CURR_DIR = HOME_DIR
+    os.chdir(replacer(HOME_DIR))
+    return lsDir(HOME_DIR)
 
 @app.route("/back", methods=["GET", "POST"])
 def back():
+    global CURR_DIR
     if len(os.getcwd()) > len(directory):
       os.chdir("..")
-      curr_dir = os.getcwd()
-      return lsDir(curr_dir)
+      CURR_DIR = os.getcwd()
+      return lsDir(CURR_DIR)
     else:
-      return lsDir(home_dir)
+      return lsDir(HOME_DIR)
 
 @app.route("/mkdir", methods=["GET", "POST"])
 def mkdir():
     os.mkdir(request.args['dir'])
-    curr_dir = os.getcwd()
-    return lsDir(curr_dir)
+    return lsDir(CURR_DIR)
 
 @app.route("/rmdir", methods=["GET", "POST"])
 def rmdir():
-    curr_dir = os.getcwd()
-    curr_dir1 = curr_dir  + '/' + replacer(request.args['dir'])
+    curr_dir1 = CURR_DIR  + '/' + replacer(request.args['dir'])
     for root, dirs, files in os.walk(curr_dir1, topdown=False):
       for name in files:
         os.remove(os.path.join(root, name))
       for name in dirs:
         os.rmdir(os.path.join(root, name))
     os.rmdir(curr_dir1)
-    return lsDir(curr_dir)
+    return lsDir(CURR_DIR)
 	
 @app.route("/rmfile", methods=["GET", "POST"])
 def rmfile():
-    curr_dir = os.getcwd()
     filename = replacer(request.args['file'])
     if os.path.exists(filename): 
        os.remove(filename)
@@ -131,7 +134,7 @@ def rmfile():
        os.remove(filename)
     except:
         print("Error while deleting %s " % filename)
-    return lsDir(curr_dir)
+    return lsDir(CURR_DIR)
 
 @app.route('/download', methods=["GET", "POST"])
 def fileDownload():
@@ -152,65 +155,43 @@ def fileUpload():
     target=os.getcwd()
     if not os.path.isdir(target):
        os.mkdir(target)
-    global curr_dir 
-    curr_dir = target
-#    file = request.files['file'] 
-#    filename = file.filename
+
     chunk = request.headers.get('Chunk-Number')
     chunk_last = request.headers.get('Chunk-Last')
     file_size = request.headers.get('Content-Size')
     filename = request.headers.get('Content-Name').encode('ascii').decode('unicode-escape')
     print("filename - %s" % filename)
     bytes_left = int(request.headers.get('content-length'))
-#    filename = secure_filename(file.filename)
-    destination="/".join([target, filename])
 
-#    file.save(destination)
-#    file.save(os.path.join(target, filename))
-#    print("session - %s" % session)
-#    stream = request.stream
+    destination="/".join([CURR_DIR, filename])
+
     with open(destination, 'ab+') as f:
       BUFFER = 1048576
       b = request.get_data()
       f.write(b)
       if chunk_last == "true":
         f.close()
-#      while b:
-#        f.write(b)
-#        b = request.get_data()
-#      while bytes_left > 0:
-#        chunk = file.stream.read(chunk_size)
-#        f.write(chunk)
-#        bytes_left -= len(chunk)
-#        print('bytes_left = %s ' % bytes_left)
-#      return make_response('Upload Complete', 200)
-#      f.write(request.get_data())
-#    session['uploadFilePath']=destination
-#    print("session - %s" % session)
+
     data={"filename":filename, "chunk":chunk}
-#    print("data - %s" % data)
     js = json.dumps(data)
     resp = Response(js, status=200, mimetype='application/json')
-#    res = make_response(jsonify({"filename":filename, "chunk":chunk }), 200)
     return resp
 
 @app.route("/rename", methods=["GET", "POST"])
 def rename():
     newfile = request.args['newname']
     oldfile = request.args['oldname']
-    curr_dir = os.getcwd()
     if newfile:
        os.rename(oldfile, newfile)
-    return lsDir(curr_dir)
+    return lsDir(CURR_DIR)
 
 @app.route("/paste", methods=["GET", "POST"])
 def paste():
-    destination = os.getcwd()
     filename = request.args['name']
     filepath = request.args['path']
     fileact = request.args['act']
     source = "/".join([filepath, filename])
-    dst = "/".join([destination, filename])
+    dst = "/".join([CURR_DIR, filename])
     tmp = source + ".tmp"
 #    print("copy  file %s to %s, %s" % (source, destination, tmp))
     if (fileact=='copy'):
@@ -218,16 +199,11 @@ def paste():
           shutil.copytree(source, tmp, False, None)
           os.rename(tmp, dst)  
        else:
-          shutil.copy2(source, destination)
+          shutil.copy2(source, CURR_DIR)
     if (fileact=='move'):
           os.rename(source, dst)  
-    return lsDir(destination)
+    return lsDir(CURR_DIR)
 
 if __name__ == "__main__":
     app.run(debug=True)
 
-#print('Content-type: text/html\r\n\r')
-#print("<p>hello world!</p>")
-#print("I can view this in my browser yay!!")
-#for i in os.listdir(directory):
-#     print(i)

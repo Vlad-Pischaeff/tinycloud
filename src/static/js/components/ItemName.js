@@ -32,6 +32,7 @@ render() {
               textOverflow: "ellipsis",
               fontWeight: "bold"
             };
+  //console.log('style--', style, this.props.fontWeight);
   
   const Name = <div style={style}>
                  <Tooltip title={this.props.name} placement="top-start">

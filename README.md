@@ -6,7 +6,7 @@ At present it is possible to:
 	<li>Delete Directory or Directories
 	<li>Delete File or Files
 	<li>Download File or Files
-	<li>Upload File or Files
+	<li>Upload File or Files with resume by hand
 	<li>Rename File or Directory
 	<li>Copy File or Directory
 	<li>Move File or Directory

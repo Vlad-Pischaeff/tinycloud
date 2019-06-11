@@ -10,6 +10,7 @@ import GetApp from '@material-ui/icons/GetApp';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import CloseIcon from '@material-ui/icons/Close';
+import ItemName from './ItemName';
 
 var $ = require('jquery');
 
@@ -37,11 +38,12 @@ export default class ModalPasteItems extends React.Component {
   
 	render() {
 		const {items} = this.props;
-		
+    
 		const pasteElements = items.map((element) =>
 				<div>
 				<ListItem>
-					<ListItemText primary={element['name']} secondary={element['path']} />
+					<ListItemText primary={<ItemName name={element['name']} fontWeight="false" />} 
+                        secondary={element['path']} />
 					<Tooltip title={element['action'] + " Item"}>
 					<Button size="small" variant="outlined" color="primary" 
 							onClick={() => this.handlePaste(element['name'], element['path'], element['action'])} >

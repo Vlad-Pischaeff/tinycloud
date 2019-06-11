@@ -227,39 +227,61 @@ class AppWindow extends Component {
 	}
 	
 	getPost = (file) => {
-    let LENGTH = file['size']/BUFFER;
     let filename = file['name'];
+    let element = this.state.items.filter(n => (n.type =='file' && n.name == filename)) || [];
+    let START = 0;
+    if (element.length != 0 ) START = +element[0].rawsize;
+    console.log('START--', START, element.length, element, this.state.items);
+    //let START = startPosition || 0; //при докачке - с какой позиции докачивать файл
     let chunk = null;
     let last_chunk = false; 
     let i = this.state.uploadChunkState[filename] || 0;
-    let start = (i * BUFFER);
-    let end = ((i + 1) * BUFFER);
+    let start = (i * BUFFER) + START;
+    let end = ((i + 1) * BUFFER) + START;
     
     chunk = file.slice(start, end);
     if (end > file['size']) {
         last_chunk = true;
     }
       
-    console.log('i--', i, LENGTH, end, file['size'], last_chunk, this.state.uploadChunkState[filename]);
-    this.getPostXHR(file, chunk, i, last_chunk);
+    console.log('i--', i, START, start,  end, file['size'], last_chunk, this.state.uploadChunkState[filename]);
+    this.getPostXHR(file, chunk, i, last_chunk, START);
 	}
 	
-  getPostXHR = (file, chunk, index, last_chunk) => {
+  getPostXHR = (file, chunk, index, last_chunk, START) => {
     let filename = file['name'];
     let obj = this.state.uploadState;
     let cnk = this.state.uploadChunkState;
     console.log('Chunk--', this.state.uploadChunkState[filename]);
+/*    let element = this.state.items.filter(n => (n.type =='file' && n.name == filename)) || [];
+    let startPostiton = 0;
+    console.log('element--', element, element.length);
+    if (element.length != 0 )
+      startPostiton = +element[0].rawsize;
+*/    
 		let xhr = new XMLHttpRequest();
-//		let status = false;
+
 		xhr.open("POST", "/upload", true);
-    
+
     xhr.setRequestHeader('Content-Name', this.escapeUnicode(file['name']));
     xhr.setRequestHeader('Content-Size', file['size']);
     xhr.setRequestHeader('Chunk-Number', index);
     xhr.setRequestHeader('Chunk-Last', last_chunk);
     xhr.responseType = "json";
-
-		xhr.onload = (e) => {
+    xhr.timeout = 20000;
+    
+    xhr.ontimeout = (e) => {
+        alert(file['name'] + ' upload failed');
+        delete this.state.uploadState[filename];
+        delete this.state.uploadChunkState[filename];
+        if (!this.isNotEmpty(this.state.uploadState)) {
+          console.log('Timeout--', this.state.uploadState, this.state.uploadChunkState[filename]);
+          this.setState({OpenModalUploadFiles: false});
+          this.getDirList();
+         }
+    };
+		
+    xhr.onload = (e) => {
 			if (xhr.readyState === 4) {
 				if (xhr.status === 200) {
 					//if (!this.isNotEmpty(this.state.uploadState))
@@ -273,7 +295,7 @@ class AppWindow extends Component {
 		};
 
     xhr.onloadend = (e) => {
-      console.log('OnLoaded--', xhr.statusText, last_chunk, this.state.uploadState);
+      console.log('OnLoaded--', xhr.statusText, last_chunk, xhr.response['filename'], xhr.response['chunk'], this.state.uploadState);
       if ((xhr.statusText == 'OK') && ( last_chunk == true )) {
         delete this.state.uploadState[filename];
         delete this.state.uploadChunkState[filename];
@@ -297,7 +319,7 @@ class AppWindow extends Component {
 		xhr.upload.onprogress = (event) => {
       let n = this.state.uploadChunkState[filename] || 0;
       let i = obj[filename] || 0;
-      let p = ~~(((+event.loaded + (n * BUFFER)) / +file['size']) * 100);
+      let p = ~~(((+event.loaded + (n * BUFFER) + START) / +file['size']) * 100);
       if (i < p) {
         obj[filename] = p;
         this.setState({ uploadState: obj});
