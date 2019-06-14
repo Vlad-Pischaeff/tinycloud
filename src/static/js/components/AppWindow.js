@@ -78,7 +78,7 @@ class AppWindow extends Component {
 						dirChecked: {},
 						filesChecked: {},
 						uploadState: {},
-            uploadChunkState: {},
+            uploadChunkNumber: {},
 						itemsForCopyOrMove: [],
 						};
 
@@ -235,7 +235,7 @@ class AppWindow extends Component {
     //let START = startPosition || 0; //при докачке - с какой позиции докачивать файл
     let chunk = null;
     let last_chunk = false; 
-    let i = this.state.uploadChunkState[filename] || 0;
+    let i = this.state.uploadChunkNumber[filename] || 0;
     let start = (i * BUFFER) + START;
     let end = ((i + 1) * BUFFER) + START;
     
@@ -244,15 +244,15 @@ class AppWindow extends Component {
         last_chunk = true;
     }
       
-    console.log('i--', i, START, start,  end, file['size'], last_chunk, this.state.uploadChunkState[filename]);
+    console.log('i--', i, START, start,  end, file['size'], last_chunk, this.state.uploadChunkNumber[filename]);
     this.getPostXHR(file, chunk, i, last_chunk, START);
 	}
 	
   getPostXHR = (file, chunk, index, last_chunk, START) => {
     let filename = file['name'];
     let obj = this.state.uploadState;
-    let cnk = this.state.uploadChunkState;
-    console.log('Chunk--', this.state.uploadChunkState[filename]);
+    let cnk = this.state.uploadChunkNumber;
+    console.log('Chunk--', this.state.uploadChunkNumber[filename]);
 /*    let element = this.state.items.filter(n => (n.type =='file' && n.name == filename)) || [];
     let startPostiton = 0;
     console.log('element--', element, element.length);
@@ -271,14 +271,21 @@ class AppWindow extends Component {
     xhr.timeout = 20000;
     
     xhr.ontimeout = (e) => {
-        alert(file['name'] + ' upload failed');
+        /*alert(file['name'] + ' upload failed');
         delete this.state.uploadState[filename];
-        delete this.state.uploadChunkState[filename];
+        delete this.state.uploadChunkNumber[filename];
         if (!this.isNotEmpty(this.state.uploadState)) {
-          console.log('Timeout--', this.state.uploadState, this.state.uploadChunkState[filename]);
+          console.log('Timeout--', this.state.uploadState, this.state.uploadChunkNumber[filename]);
           this.setState({OpenModalUploadFiles: false});
           this.getDirList();
-         }
+         }*/
+      $.get(window.location.href + 'ls', (data) => {
+        this.setState({items: data}, () => {
+          cnk[filename] = 0;
+          this.setState({ uploadChunkNumber: cnk }, () => (this.getPost(file))); 
+        });
+      });
+           
     };
 		
     xhr.onload = (e) => {
@@ -298,7 +305,7 @@ class AppWindow extends Component {
       console.log('OnLoaded--', xhr.statusText, last_chunk, xhr.response['filename'], xhr.response['chunk'], this.state.uploadState);
       if ((xhr.statusText == 'OK') && ( last_chunk == true )) {
         delete this.state.uploadState[filename];
-        delete this.state.uploadChunkState[filename];
+        delete this.state.uploadChunkNumber[filename];
         if (!this.isNotEmpty(this.state.uploadState)) {
           this.setState({OpenModalUploadFiles: false});
           this.getDirList();
@@ -307,7 +314,7 @@ class AppWindow extends Component {
       else {
         if (xhr.response['filename'] == filename) {
           cnk[filename] = +xhr.response['chunk'] + 1;
-          this.setState({ uploadChunkState: cnk }, () => (this.getPost(file)));
+          this.setState({ uploadChunkNumber: cnk }, () => (this.getPost(file)));
         }
       }
     }
@@ -317,7 +324,7 @@ class AppWindow extends Component {
 		};
 
 		xhr.upload.onprogress = (event) => {
-      let n = this.state.uploadChunkState[filename] || 0;
+      let n = this.state.uploadChunkNumber[filename] || 0;
       let i = obj[filename] || 0;
       let p = ~~(((+event.loaded + (n * BUFFER) + START) / +file['size']) * 100);
       if (i < p) {
