@@ -153,7 +153,7 @@ def rmfile():
 @app.route('/download', methods=["GET", "POST"])
 def fileDownload():
     #For windows you need to use drive name [ex: F:/Example.pdf]
-    source = load_dir()
+    source = replacer(load_dir())
     data = request.data.decode('utf8')
     print("data-- %s" % request.data)
     data2 = json.loads(data)
