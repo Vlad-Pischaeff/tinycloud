@@ -192,8 +192,8 @@ def fileUpload():
 @app.route("/rename", methods=["GET", "POST"])
 def rename():
     dir = load_dir()
-    newfile = request.args['newname']
-    oldfile = request.args['oldname']
+    newfile = "/".join([dir, request.args['newname']])
+    oldfile = "/".join([dir, request.args['oldname']])
     if newfile:
        os.rename(oldfile, newfile)
     return lsDir(dir)
