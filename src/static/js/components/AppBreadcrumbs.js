@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
-import Link from '@material-ui/core/Link';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import HomeIcon from '@material-ui/icons/Home';
@@ -10,10 +9,6 @@ import HomeIcon from '@material-ui/icons/Home';
 var $ = require('jquery');
 
 const styles = theme => ({
-  root: {
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-  },
   button: {
     margin: theme.spacing(0),
     maxWidth: "15vw",
@@ -27,8 +22,11 @@ const styles = theme => ({
   },
   icon: {
     marginRight: theme.spacing(0),
-    width: 24,
-    height: 24,
+    marginLeft: theme.spacing(1),
+    marginTop: theme.spacing(0.8),
+    marginBottom: theme.spacing(0.8),
+    width: "1em",
+    height: "1em",
   },
 });
 
