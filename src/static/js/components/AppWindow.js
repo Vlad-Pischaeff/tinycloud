@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ItemList from './ItemList';
+import AppBreadcrumbs from './AppBreadcrumbs';
 import ModalCreateDir from './ModalCreateDir';
 import ModalRemoveItem from './ModalRemoveItem';
 import ModalPasteItems from './ModalPasteItems';
@@ -47,10 +48,17 @@ const styles = theme => ({
   iconSmall: {
     fontSize: 20,
   },
-  paper:{
+  paper70:{
     width: '100%', 
     height: '70vh',
   },
+  paper60:{
+    width: '100%', 
+    height: '60vh',
+  },
+  paper10:{
+    height: '100%',
+  }
 });
 
 const LightTooltip = withStyles(theme => ({
@@ -80,6 +88,7 @@ class AppWindow extends Component {
 						uploadState: {},
             uploadChunkNumber: {},
 						itemsForCopyOrMove: [],
+            dirPath: [],
 						};
 
 		//document.addEventListener('DOMContentLoaded', this.getDirList);
@@ -92,15 +101,25 @@ class AppWindow extends Component {
 	replaceSpace(str) {
 		return str.replace( /\s/g, "%20" );
 	}
-	
+
+  setItems = (data, path) => {
+    this.setState({ items: data });
+    this.setState({ dirPath: path });
+  } 
+  
 	getDirList = () => {
   	$.get(window.location.href + 'ls', (data) => {
 			this.setState({items: data});
 		});
 	}
 
-	setDirList = (data) => { 
-		this.setState({ items: data });
+	setDirList = (data, item) => {
+    if (typeof item !== "undefined") {
+      var obj = this.state.dirPath.slice();
+      obj.push(item);
+      this.setState({ dirPath: obj}, () => console.log("dir path0 --", this.state.dirPath));
+    }
+    this.setState({ items: data });
 		this.setState({ dirChecked: {}, filesChecked: {}});
 	}
 
@@ -109,13 +128,16 @@ class AppWindow extends Component {
 			this.setState({items: data});
 		});
 		this.setState({ dirChecked: {}, filesChecked: {}});
+    this.setState({ dirPath: []}, () => console.log("dir path home --", this.state.dirPath));
 	}
 
 	getBackList = () => {
   	$.get(window.location.href + 'back', (data) => {
 			this.setState({items: data});
 		});
+    var obj = this.state.dirPath.slice(0,-1);
 		this.setState({ dirChecked: {}, filesChecked: {}});
+    this.setState({ dirPath: obj}, () => console.log("dir path1 --", this.state.dirPath));
 	}
 	
 	isNotEmpty(obj) {
@@ -253,12 +275,6 @@ class AppWindow extends Component {
     let obj = this.state.uploadState;
     let cnk = this.state.uploadChunkNumber;
     console.log('Chunk--', this.state.uploadChunkNumber[filename]);
-/*    let element = this.state.items.filter(n => (n.type =='file' && n.name == filename)) || [];
-    let startPostiton = 0;
-    console.log('element--', element, element.length);
-    if (element.length != 0 )
-      startPostiton = +element[0].rawsize;
-*/    
 		let xhr = new XMLHttpRequest();
 
 		xhr.open("POST", "/upload", true);
@@ -500,16 +516,28 @@ class AppWindow extends Component {
       
 			<Grid container direction="row">
         <Grid item style={{width:"20%"}} >
-          <Paper square={true} className={classes.paper} >
+          <Paper square={true} className={classes.paper70} >
           </Paper>
         </Grid>
-        <Grid item style={{width:"80%"}} >
-          <Paper square={true} className={classes.paper} >
-            <ItemList items={sortItems} _setDirList={this.setDirList}
-                                        ___setDelItem={this.setDelItem}	
-                                        ___addToBundle={this.addToBundleFinal} />
-          </Paper>
-				</Grid>
+
+        
+        <Grid container style={{width:"80%"}} direction="column">
+          <Grid item style={{height:"10vh"}} >
+            <Paper square={true} className={classes.paper10}>
+              <AppBreadcrumbs dirPath={this.state.dirPath.slice()} getHomeList={this.getHomeList} setItems={this.setItems} />
+            </Paper>
+          </Grid>
+          
+          <Grid item style={{height:"60vh"}} >
+            <Paper square={true} className={classes.paper60} >
+              <ItemList items={sortItems} _setDirList={this.setDirList}
+                                          ___setDelItem={this.setDelItem}	
+                                          ___addToBundle={this.addToBundleFinal} />
+            </Paper>
+          </Grid>
+        </Grid>
+        
+
       </Grid>  
     </Grid>
     

@@ -25,7 +25,7 @@ os.chdir(directory)
 HOME_DIR = directory
 f.close()
 
-data = { "curr_dir": directory}
+data = { "curr_dir": directory }
 with open(tmp_file, 'w+') as f:
   json.dump(data, f)
 f.close()
@@ -96,6 +96,14 @@ def cd():
     save_dir(dir)
     return lsDir(dir)
 
+@app.route("/cdrand", methods=["GET", "POST"])
+def cdrand():
+    dir = HOME_DIR
+    dir = dir + '/' + request.args['dir']
+    os.chdir(replacer(dir))
+    save_dir(dir)
+    return lsDir(dir)
+
 @app.route("/pwd", methods=["GET", "POST"])
 def pwd():
     return os.getcwd()
@@ -129,7 +137,7 @@ def mkdir():
 @app.route("/rmdir", methods=["GET", "POST"])
 def rmdir():
     dir = load_dir()
-    curr_dir1 = dir  + '/' + replacer(request.args['dir'])
+    curr_dir1 = replacer(dir)  + '/' + replacer(request.args['dir'])
     for root, dirs, files in os.walk(curr_dir1, topdown=False):
       for name in files:
         os.remove(os.path.join(root, name))

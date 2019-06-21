@@ -33,8 +33,8 @@ class ItemList extends Component {
   }
   
 //transit: forms content of new directory from ModalRenameFile to AppWindow
-	__setDirList = (data) => {
-		this.props._setDirList(data);
+	__setDirList = (data, item) => {
+		this.props._setDirList(data, item);
 	}
 	
 //transit: forms lists for delete from Item to AppWindow 
@@ -73,7 +73,7 @@ class ItemList extends Component {
             rowCount={items.length}
             width={width}
             height={height}
-            rowHeight={48}
+            rowHeight={52}
             rowRenderer={renderRow}
           />
         }

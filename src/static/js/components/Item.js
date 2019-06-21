@@ -46,11 +46,11 @@ class Item extends Component {
 		str: "",
 	};
 
-	openDir = (event) => {
+	openDir = (item) => {
 		$.get(window.location.href + 'cd', 
-			{ "dir": event },
+			{ "dir": item },
     		(data) => {
-          this.props._setDirList(data);
+          this.props._setDirList(data, item);
 			});
 	}
 
@@ -108,12 +108,12 @@ class Item extends Component {
 		}
     }
 	
-	handleOnMouseEnter   = (e) => {
+	handleOnMouseEnter = (e) => {
 //    console.log("handleOnMouseEnter", this.state.showButtons);
 		this.setState({ showButtons: false });
 	};
 	
-	handleOnMouseLeave   = (e) => {
+	handleOnMouseLeave = (e) => {
 //    console.log("handleOnMouseLeave", this.state.showButtons);
 		this.setState({ showButtons: true });
   };
