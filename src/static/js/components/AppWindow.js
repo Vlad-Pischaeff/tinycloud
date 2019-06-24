@@ -48,17 +48,10 @@ const styles = theme => ({
   iconSmall: {
     fontSize: 20,
   },
-  paper70:{
+   paper:{
     width: '100%', 
-    height: '70vh',
-  },
-  paper60:{
-    width: '100%', 
-    height: '60vh',
-  },
-  paper10:{
     height: '100%',
-  }
+  },
 });
 
 const LightTooltip = withStyles(theme => ({
@@ -433,7 +426,7 @@ class AppWindow extends Component {
 			});
 			mass.push(obj);
 			this.setState({itemsForCopyOrMove: mass});
-//			console.log("itemsForCopyOrMove--", this.state.itemsForCopyOrMove);
+			console.log("itemsForCopyOrMove--", this.state.itemsForCopyOrMove);
 		}
 	}
 	
@@ -515,21 +508,21 @@ class AppWindow extends Component {
 			</Grid>
       
 			<Grid container direction="row">
-        <Grid item style={{width:"20%"}} >
-          <Paper square={true} className={classes.paper70} >
+        <Grid item style={{width:"20%", height:"30em"}} >
+          <Paper square={true} className={classes.paper} >
           </Paper>
         </Grid>
 
         
         <Grid container style={{width:"80%"}} direction="column">
-          <Grid item style={{height:"10vh"}} >
-            <Paper square={true} className={classes.paper10}>
+          <Grid item style={{height:"5em"}} >
+            <Paper square={true} className={classes.paper}>
               <AppBreadcrumbs dirPath={this.state.dirPath.slice()} getHomeList={this.getHomeList} setItems={this.setItems} />
             </Paper>
           </Grid>
           
-          <Grid item style={{height:"60vh"}} >
-            <Paper square={true} className={classes.paper60} >
+          <Grid item style={{height:"25em"}} >
+            <Paper square={true} className={classes.paper} >
               <ItemList items={sortItems} _setDirList={this.setDirList}
                                           ___setDelItem={this.setDelItem}	
                                           ___addToBundle={this.addToBundleFinal} />

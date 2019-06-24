@@ -1,33 +1,40 @@
 import React, { Component } from 'react';
+import { styled } from '@material-ui/styles';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import HomeIcon from '@material-ui/icons/Home';
+import Grid from '@material-ui/core/Grid';
 
 var $ = require('jquery');
 
 const styles = theme => ({
   button: {
     margin: theme.spacing(0),
-    maxWidth: "15vw",
+    maxWidth: "10vw",
   },
   text:{
-    maxWidth: "15vw",
+    maxWidth: "10vw",
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
     textAlign: "left",
   },
-  icon: {
-    marginRight: theme.spacing(0),
-    marginLeft: theme.spacing(1),
-    marginTop: theme.spacing(0.8),
-    marginBottom: theme.spacing(0.8),
-    width: "1em",
-    height: "1em",
-  },
+  grid:{
+    width:'5em', 
+    height: '5em', 
+    background: '#bbbbbb',
+  }
+});
+
+const MyButton = styled(Button)({
+  background: 'none',
+  borderRadius: 0,
+  color: 'black',
+  height: '5rem',
+  width: '5rem',
 });
 
 class AppBreadcrumbs extends Component {
@@ -60,14 +67,22 @@ class AppBreadcrumbs extends Component {
   );
   
   return (
-		<div>
-      <Breadcrumbs aria-label="Breadcrumb">
-        <IconButton className={classes.icon} size="medium" color="inherit" aria-label="Home" onClick={this.props.getHomeList} >
-          <HomeIcon />
-        </IconButton>
+		<Grid container direction="row" style={{ width:'100%'}}>
+    <Grid item className={classes.grid}>
+    
+      <MyButton onClick={this.props.getHomeList}>
+        <HomeIcon />
+      </MyButton>
+      
+    </Grid>
+    <Grid item style={{ width:'80%'}}>
+    
+      <Breadcrumbs maxItems={5}>
         {listBreadcrumbs}
       </Breadcrumbs>
-		</div>
+    
+    </Grid>
+  </Grid>
     );
   }
 }

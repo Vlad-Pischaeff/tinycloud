@@ -19,10 +19,11 @@ conf_file = path + '/tinycloud.conf'
 tmp_file = path + '/.tinycloud._tmp'
 
 with open(conf_file, 'r') as f:
-  data = json.loads(f.read())
+    data = json.loads(f.read())
 directory = data["directory"]
-os.chdir(directory)
 HOME_DIR = directory
+os.chdir(directory)
+
 f.close()
 
 data = { "curr_dir": directory }
@@ -74,7 +75,7 @@ def lsDir(dir):
     m.append(d)
   return jsonify(m)
 #  return json.dumps(m)
- 
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -106,7 +107,8 @@ def cdrand():
 
 @app.route("/pwd", methods=["GET", "POST"])
 def pwd():
-    return os.getcwd()
+    dir = load_dir()
+    return dir
 
 @app.route("/home", methods=["GET", "POST"])
 def home():
@@ -136,8 +138,8 @@ def mkdir():
 
 @app.route("/rmdir", methods=["GET", "POST"])
 def rmdir():
-    dir = load_dir()
-    curr_dir1 = replacer(dir)  + '/' + replacer(request.args['dir'])
+    dir = replacer(load_dir())
+    curr_dir1 = dir  + '/' + replacer(request.args['dir'])
     for root, dirs, files in os.walk(curr_dir1, topdown=False):
       for name in files:
         os.remove(os.path.join(root, name))
@@ -145,10 +147,10 @@ def rmdir():
         os.rmdir(os.path.join(root, name))
     os.rmdir(curr_dir1)
     return ls()
-	
+
 @app.route("/rmfile", methods=["GET", "POST"])
 def rmfile():
-    dir = load_dir()
+    dir = replacer(load_dir())
     filename = replacer(request.args['file'])
     try:
       os.chdir(replacer(dir))
@@ -171,10 +173,10 @@ def fileDownload():
     path="/".join([source, filename])
     print("path for download %s" % path)
     return send_file(path, as_attachment=True, attachment_filename=filename)
-	
+
 @app.route('/upload', methods=['POST','GET'])
 def fileUpload():
-    dir = load_dir()
+    dir = replacer(load_dir())
     chunk = request.headers.get('Chunk-Number')
     chunk_last = request.headers.get('Chunk-Last')
     file_size = int(request.headers.get('Content-Size'))
@@ -199,7 +201,7 @@ def fileUpload():
 
 @app.route("/rename", methods=["GET", "POST"])
 def rename():
-    dir = load_dir()
+    dir = replacer(load_dir())
     newfile = "/".join([dir, request.args['newname']])
     oldfile = "/".join([dir, request.args['oldname']])
     if newfile:
@@ -208,9 +210,9 @@ def rename():
 
 @app.route("/paste", methods=["GET", "POST"])
 def paste():
-    dir = load_dir()
+    dir = replacer(load_dir())
     filename = request.args['name']
-    filepath = request.args['path']
+    filepath = replacer(request.args['path'])
     fileact = request.args['act']
     source = "/".join([filepath, filename])
     dst = "/".join([dir, filename])
@@ -219,11 +221,11 @@ def paste():
     if (fileact=='copy'):
        if os.path.isdir(source):
           shutil.copytree(source, tmp, False, None)
-          os.rename(tmp, dst)  
+          os.rename(tmp, dst)
        else:
           shutil.copy2(source, dir)
     if (fileact=='move'):
-          os.rename(source, dst)  
+          os.rename(source, dst)
     return lsDir(dir)
 
 if __name__ == "__main__":
