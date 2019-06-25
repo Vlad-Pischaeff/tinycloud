@@ -25,30 +25,22 @@ import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 
-//let download = require('./download');
-
 var $ = require('jquery');
 
 const BUFFER = 4 * 1024 * 1024;
 
 const styles = theme => ({
   button: {
-    margin: theme.spacing.unit,
-    fontSize: "1em",
+    margin: '0.05em',
+    height: '1.5em',
+    width: '1.5em',
+    fontSize: "2em",
     color: "grey",
     backgroundColor: "white",
     border: "1px solid grey",
+    borderRadius: '1em',
   },
-  leftIcon: {
-    marginRight: theme.spacing.unit,
-  },
-  rightIcon: {
-    marginLeft: theme.spacing.unit,
-  },
-  iconSmall: {
-    fontSize: 20,
-  },
-   paper:{
+  paper:{
     width: '100%', 
     height: '100%',
   },
@@ -56,21 +48,18 @@ const styles = theme => ({
 
 const LightTooltip = withStyles(theme => ({
   tooltip: {
-    backgroundColor: theme.palette.common.white,
-    color: 'rgba(0, 0, 0, 0.87)',
+    backgroundColor: 'rgba(255, 255, 255, 0.4)',
+    color: 'rgba(0, 0, 0, 0.9)',
     boxShadow: theme.shadows[1],
     fontSize: 12,
-    position: 'absolute', 
-    right: '-2em', 
-    top: '-7.5em',
+    position: 'relative', 
+    top: '-7.2em',
   },
 }))(Tooltip);
 
 class AppWindow extends Component {
 	
-	constructor(props) {
-		super(props);
-		this.state = { 	items: [],
+  state = {	items: [],
 						OpenModalCreateDir: false,
 						OpenModalRemoveItem: false,
 						OpenModalUploadFiles: false,
@@ -82,11 +71,8 @@ class AppWindow extends Component {
             uploadChunkNumber: {},
 						itemsForCopyOrMove: [],
             dirPath: [],
-						};
+	};
 
-		//document.addEventListener('DOMContentLoaded', this.getDirList);
-	}
-  
   componentWillMount() {
     this.getHomeList();
   }
@@ -452,29 +438,25 @@ class AppWindow extends Component {
 			<Grid container direction="row">
 				<div className="Header" style={{width:"90%"}}>
 				<LightTooltip title="Home" >
-					<Fab size="small" variant="contained" color="primary" className={classes.button} 
-               onClick={this.getHomeList}>
+					<Fab variant="contained" color="primary" className={classes.button} onClick={this.getHomeList}>
 						<Home />
 					</Fab>
 				</LightTooltip >
 
 				<LightTooltip title="Back">
-					<Fab size="small" variant="contained" color="primary" className={classes.button} 
-               onClick={this.getBackList}>
+					<Fab variant="contained" color="primary" className={classes.button} onClick={this.getBackList}>
 						<Undo />
 					</Fab>
 				</LightTooltip >
 
 				<LightTooltip title="Create Directory" >
-					<Fab size="small" variant="contained" color="primary" className={classes.button} 
-               onClick={this.openModalCreateDir}>
+					<Fab variant="contained" color="primary" className={classes.button} onClick={this.openModalCreateDir}>
 						<CreateNewFolder />
 					</Fab>
 				</LightTooltip >
 				
 				<LightTooltip title="Upload File" >
-					<Fab size="small" variant="contained" color="primary" className={classes.button}
-               component="label">
+					<Fab variant="contained" color="primary" className={classes.button} component="label">
 						<CloudUpload />
 						<input type="file" multiple style={{ display: "none" }}
                    onChange={(e)=>{this.uploadFile(e.currentTarget)}}/>
@@ -482,7 +464,7 @@ class AppWindow extends Component {
 				</LightTooltip >
 				
 				<LightTooltip title="Download File" >
-					<Fab size="small" variant="contained" color="primary" className={classes.button}
+					<Fab variant="contained" color="primary" className={classes.button}
                component="label" onClick={this.downloadItem}
                disabled={this.buttonDisabled()} >
 						<CloudDownload />
@@ -490,7 +472,7 @@ class AppWindow extends Component {
 				</LightTooltip >
 
 				<LightTooltip title="Delete Item" >
-					<Fab size="small" variant="contained" color="secondary" className={classes.button} 
+					<Fab variant="contained" color="secondary" className={classes.button} 
                onClick={this.openModalRemoveItem} 
                disabled={this.buttonDisabled()} >
 						<Delete />
