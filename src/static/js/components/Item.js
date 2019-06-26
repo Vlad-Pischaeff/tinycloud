@@ -16,6 +16,11 @@ const styles = theme => ({
     width: "40px", 
     minWidth: "0",
   },
+  thumbnail:{
+    maxWidth: "48px", 
+    maxHeight: "48px",
+    margin: "auto", 
+  },
   image24: {
     width: "24px", 
     height: "24px",
@@ -38,6 +43,7 @@ const styles = theme => ({
 });
 
 var $ = require('jquery');
+
 
 class Item extends Component {
 	state = {
@@ -122,13 +128,26 @@ class Item extends Component {
 		this.props._addToBundle(name, type, act);
 	}
 	
+  showThumbnail = (name) => {
+//    console.log('showThumbnail', name);
+    this.props._showThumbnail(name);
+  }
+  
+  hideThumbnail = () => {
+//    console.log('hideThumbnail', name);
+    this.props._hideThumbnail();
+  }
+  
 	render() {
 	const {classes} = this.props;
-	const {file} = this.props
-	const keyItem = this.props.keyItem
+	const {file} = this.props;
+	const keyItem = this.props.keyItem;
+  const pictures = ['.jpg', 'jpeg', '.svg', '.png', '.gif', '.bmp', '.ico'];
+  //`${file.name}`
   
-  const FileOrDir = (file.type == 'dir') 
-      ?	<Grid container direction="row" style={{width:"70%"}} id="myDir" 
+  let FileOrDir;
+  if (file.type == 'dir') 
+    FileOrDir =	(<Grid container direction="row" style={{width:"70%"}} id="myDir" 
               onClick={(e) => this.openDir(this.replaceSpace(file.name))} className={classes.item} >
           <Grid item style={{width:"15%",display:"flex"}}>
             <img src={require('../img/Folder-blue.svg')} className={classes.image48} />
@@ -137,19 +156,33 @@ class Item extends Component {
               <ListItemText primary={<ItemName name={file.name} fontWeight={this.state.showButtons} />} 
                             secondary={file.date} style={{width:"100%"}} />
           </Grid>
-				</Grid>    
-
-			:	<Grid container direction="row" style={{width:"70%"}} id="myFile" 
+				</Grid> )
+  else if (pictures.some(n => n === file.name.slice(-4).toLowerCase()))
+		FileOrDir =	(<Grid container direction="row" style={{width:"70%"}} id="myFile" 
               onClick={(e)=>this.handleClickItem(e, file.name)} 
 							onContextMenu={(e)=>this.handleClickItem(e, file.name)} className={classes.item} tooltip={file.name}>
           <Grid item style={{width:"15%",display:"flex"}}>
-            <img src={require('../img/App-generic.svg')} className={classes.image48} />
+              <img  src={'show/' + file.name} className={classes.thumbnail} 
+                    onMouseOver={() => this.showThumbnail(file.name)} 
+                    onMouseOut={() => this.hideThumbnail()} />
           </Grid>
           <Grid item style={{width:"85%"}}>
               <ListItemText primary={<ItemName name={file.name} fontWeight={this.state.showButtons} />} 
                             secondary={file.date + "   Size: " + file.size} style={{width:"100%"}} />
           </Grid>
-				</Grid> ;
+				</Grid> )
+   else 
+    FileOrDir =	(<Grid container direction="row" style={{width:"70%"}} id="myFile" 
+              onClick={(e)=>this.handleClickItem(e, file.name)} 
+							onContextMenu={(e)=>this.handleClickItem(e, file.name)} className={classes.item} tooltip={file.name}>
+          <Grid item style={{width:"15%",display:"flex"}}>
+              <img src={require('../img/App-generic.svg')} className={classes.image48} />
+          </Grid>
+          <Grid item style={{width:"85%"}}>
+              <ListItemText primary={<ItemName name={file.name} fontWeight={this.state.showButtons} />} 
+                            secondary={file.date + "   Size: " + file.size} style={{width:"100%"}} />
+          </Grid>
+				</Grid> );
         
   const buttonEdit = (!this.state.showButtons)
       ? <Tooltip title="Rename Item" placement="top">

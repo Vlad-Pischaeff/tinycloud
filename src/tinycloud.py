@@ -1,6 +1,6 @@
 #c:/python/python37
 from flask import Flask, render_template, jsonify, request, session, Response, make_response
-from flask import send_file
+from flask import send_file, send_from_directory
 from datetime import datetime
 import time
 import os 
@@ -228,6 +228,12 @@ def paste():
           os.rename(source, dst)
     return lsDir(dir)
 
+@app.route('/show/<filename>')
+def show(filename):
+    dir = replacer(load_dir())
+#    print('show dir-- %s %s' % (dir, filename))
+    return send_from_directory(dir, filename)
+    
 if __name__ == "__main__":
     app.run(debug=True)
 

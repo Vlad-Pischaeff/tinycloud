@@ -71,6 +71,8 @@ class AppWindow extends Component {
             uploadChunkNumber: {},
 						itemsForCopyOrMove: [],
             dirPath: [],
+            showThumbnail: false,
+            fileThumbnail: '',
 	};
 
   componentWillMount() {
@@ -423,6 +425,16 @@ class AppWindow extends Component {
 //		console.log("itemsForCopyOrMove--", this.state.itemsForCopyOrMove);
 	}
 	
+  showThumbnail = (name) => {
+    this.setState({ fileThumbnail: name });
+    this.setState({ showThumbnail: true });
+  }
+  
+  hideThumbnail = () => {
+    this.setState({ fileThumbnail: '' });
+    this.setState({ showThumbnail: false });
+  }
+  
 	render() {
 	const { classes } = this.props;
   const sortItems = this.state.items.sort((a, b) => {
@@ -492,6 +504,10 @@ class AppWindow extends Component {
 			<Grid container direction="row">
         <Grid item style={{width:"20%", height:"30em"}} >
           <Paper square={true} className={classes.paper} >
+            
+              <img src={'show/' + this.state.fileThumbnail}
+                   style={{maxWidth:"100%", maxHeight:"100%", visibility: (this.state.showThumbnail) ? "visible": "hidden"}} />
+            
           </Paper>
         </Grid>
 
@@ -507,7 +523,9 @@ class AppWindow extends Component {
             <Paper square={true} className={classes.paper} >
               <ItemList items={sortItems} _setDirList={this.setDirList}
                                           ___setDelItem={this.setDelItem}	
-                                          ___addToBundle={this.addToBundleFinal} />
+                                          ___addToBundle={this.addToBundleFinal} 
+                                          ___showThumbnail={this.showThumbnail} 
+                                          ___hideThumbnail={this.hideThumbnail} />
             </Paper>
           </Grid>
         </Grid>

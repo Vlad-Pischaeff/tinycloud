@@ -46,6 +46,14 @@ class ItemList extends Component {
 		this.props.___addToBundle(name, type, act);
 	}
 	
+  __showThumbnail = (name) => {
+    this.props.___showThumbnail(name);
+  }
+  
+  __hideThumbnail = () => {
+    this.props.___hideThumbnail();
+  }
+  
   
 	render() {
 	
@@ -59,7 +67,9 @@ class ItemList extends Component {
                                                   _setDirList={this.__setDirList} 
                                                   _addToBundle={this.__addToBundle}
                                                   _playVideo={this.playVideo}
-                                                  _openModalRenameFile={this.openModalRenameFile}/>
+                                                  _openModalRenameFile={this.openModalRenameFile}
+                                                  _showThumbnail={this.__showThumbnail} 
+                                                  _hideThumbnail={this.__hideThumbnail}/>
       </div>
     );
   }

@@ -12,11 +12,11 @@ var $ = require('jquery');
 export default class ModalCreateDir extends React.Component {
 
   state = {
-	name:"",
+    name:"",
   };
 
   handleCloseCancel = () => {
-	this.props.closeWindow();
+    this.props.closeWindow();
     this.setState({ name: "" });
   };
 
@@ -31,9 +31,9 @@ export default class ModalCreateDir extends React.Component {
   };
 
   handleKeyPress = (e) => {
-	if (e.key === 'Enter') {
-		this.handleCloseOK();
-	}
+    if (e.key === 'Enter') {
+      this.handleCloseOK();
+    }
   }
   
   render() {
