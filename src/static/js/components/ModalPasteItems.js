@@ -45,7 +45,7 @@ export default class ModalPasteItems extends React.Component {
 					<ListItemText primary={<ItemName name={element['name']} fontWeight="false" />} 
                         secondary={element['path']} />
 					<Tooltip title={element['action'] + " Item"}>
-					<Button size="small" variant="outlined" color="primary" 
+					<Button size="small" variant="outlined" color="primary" style={{marginLeft: '1em'}}
 							onClick={() => this.handlePaste(element['name'], element['path'], element['action'])} >
 						<GetApp />
 					</Button>
@@ -58,7 +58,7 @@ export default class ModalPasteItems extends React.Component {
 		
     <Dialog open={this.props.openWindow} onClose={this.handleClose}	aria-labelledby="form-dialog">
 
-			<DialogTitle id="form-dialog-title">Pasting listed items&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<DialogTitle id="form-dialog-title">Paste listed items&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			  <IconButton aria-label="Close" style={{position: 'absolute', right: "4px", top: "4px"}} 
                     onClick={this.handleClose} >
 					<CloseIcon />
