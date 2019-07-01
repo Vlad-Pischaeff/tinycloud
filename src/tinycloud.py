@@ -1,6 +1,8 @@
 #c:/python/python37
 from flask import Flask, render_template, jsonify, request, session, Response, make_response
 from flask import send_file, send_from_directory
+from PIL import Image
+import io
 from datetime import datetime
 import time
 import os 
@@ -231,7 +233,20 @@ def paste():
 @app.route('/show/<filename>')
 def show(filename):
     dir = replacer(load_dir())
-#    print('show dir-- %s %s' % (dir, filename))
+    return send_from_directory(dir, filename)
+
+@app.route('/show2/<filename>')
+def show2(filename):
+    basewidth = 100
+    dir = replacer(load_dir())
+    if (filename[:3] =='jpg' or filename[:4] =='jpeg'):
+      img = Image.open(filename)
+      wpercent = (basewidth/float(img.size[0]))
+      hsize = int((float(img.size[1])*float(wpercent)))
+      img.resize((basewidth,hsize), Image.ANTIALIAS)
+      tmp = io.BytesIO()
+      img.save(tmp, format='JPEG')
+      return Response(tmp.getvalue(), mimetype='image/jpeg')   
     return send_from_directory(dir, filename)
     
 if __name__ == "__main__":

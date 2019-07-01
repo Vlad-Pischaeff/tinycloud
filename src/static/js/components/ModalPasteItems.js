@@ -15,7 +15,7 @@ import ItemName from './ItemName';
 var $ = require('jquery');
 
 export default class ModalPasteItems extends React.Component {
-	
+  
 	handleClose = () => {
 		this.props.closeWindow();
 	};
@@ -33,7 +33,7 @@ export default class ModalPasteItems extends React.Component {
 				this.props.listContent(data);
 			});
 		this.props.removeItemFromContent(name);
-		console.log("paste--", name, path, action);
+//		console.log("paste--", name, path, action);
 	};
   
 	render() {
@@ -43,7 +43,7 @@ export default class ModalPasteItems extends React.Component {
 				<div>
 				<ListItem>
 					<ListItemText primary={<ItemName name={element['name']} fontWeight="false" />} 
-                        secondary={element['path']} />
+                        secondary={<ItemName name={element['path']} fontWeight="false" />} />
 					<Tooltip title={element['action'] + " Item"}>
 					<Button size="small" variant="outlined" color="primary" style={{marginLeft: '1em'}}
 							onClick={() => this.handlePaste(element['name'], element['path'], element['action'])} >

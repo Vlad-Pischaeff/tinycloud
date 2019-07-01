@@ -19,7 +19,7 @@ const styles = theme => ({
   thumbnail:{
     maxWidth: "48px", 
     maxHeight: "48px",
-    margin: "auto", 
+    margin: "auto",
   },
   image24: {
     width: "24px", 
@@ -148,7 +148,7 @@ class Item extends Component {
   let FileOrDir;
   if (file.type == 'dir') 
     FileOrDir =	(<Grid container direction="row" style={{width:"70%"}} id="myDir" 
-              onClick={(e) => this.openDir(this.replaceSpace(file.name))} className={classes.item} >
+              onClick={() => this.openDir(this.replaceSpace(file.name))} className={classes.item} >
           <Grid item style={{width:"15%",display:"flex"}}>
             <img src={require('../img/Folder-blue.svg')} className={classes.image48} />
           </Grid>
@@ -162,7 +162,7 @@ class Item extends Component {
               onClick={(e)=>this.handleClickItem(e, file.name)} 
 							onContextMenu={(e)=>this.handleClickItem(e, file.name)} className={classes.item} tooltip={file.name}>
           <Grid item style={{width:"15%",display:"flex"}}>
-              <img  src={'show/' + file.name} className={classes.thumbnail} 
+              <img  src={'show2/' + file.name} className={classes.thumbnail} 
                     onMouseOver={() => this.showThumbnail(file.name)} 
                     onMouseOut={() => this.hideThumbnail()} />
           </Grid>

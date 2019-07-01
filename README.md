@@ -26,6 +26,7 @@ At present it is possible to:
 <pre><tt>
    pip install flask
    pip install flask_cors
+   pip install pillow
 </tt></pre>
 <li> Create You own project directory structure by
 <pre><tt>

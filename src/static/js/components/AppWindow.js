@@ -44,6 +44,10 @@ const styles = theme => ({
     width: '100%', 
     height: '100%',
   },
+  img:{
+    maxWidth: '100%', 
+    maxHeight: '100%',
+  }
 });
 
 const LightTooltip = withStyles(theme => ({
@@ -505,8 +509,8 @@ class AppWindow extends Component {
         <Grid item style={{width:"20%", height:"30em"}} >
           <Paper square={true} className={classes.paper} >
             
-              <img src={'show/' + this.state.fileThumbnail}
-                   style={{maxWidth:"100%", maxHeight:"100%", visibility: (this.state.showThumbnail) ? "visible": "hidden"}} />
+              <img src={'show/' + this.state.fileThumbnail} className={classes.img}
+                   style={{visibility: (this.state.showThumbnail) ? "visible": "hidden"}} />
             
           </Paper>
         </Grid>

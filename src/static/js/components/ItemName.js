@@ -20,8 +20,14 @@ export default class ItemName extends React.Component {
     console.log("measure--", measureElement(this.content).width, measureElement(this.content).height);
  //   this.content && setState({ contentWidth: measureElement(this.content).width });
   }*/
-
-render() {
+	
+  placeSpace(str) {
+		return str.replace( /%20/g, " " );
+	}
+  
+  render() {
+  const {name} = this.props;
+  
   const style = this.props.fontWeight 
           ? { whiteSpace: "nowrap",
               overflow: "hidden",
@@ -35,8 +41,8 @@ render() {
   //console.log('style--', style, this.props.fontWeight);
   
   const Name = <div style={style}>
-                 <Tooltip title={this.props.name} placement="top-start">
-                   <span ref={r => this.content = r}> {this.props.name}</span>
+                 <Tooltip title={this.placeSpace(name)} placement="top-start">
+                   <span ref={r => this.content = r}> {this.placeSpace(name)}</span>
                  </Tooltip>
                </div>;
 
