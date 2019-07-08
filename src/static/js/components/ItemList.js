@@ -54,6 +54,9 @@ class ItemList extends Component {
     this.props.___hideThumbnail();
   }
   
+  _showPicture = (name) => {
+    this.props.__showPicture(name);
+  }
   
 	render() {
 	
@@ -69,7 +72,8 @@ class ItemList extends Component {
                                                   _playVideo={this.playVideo}
                                                   _openModalRenameFile={this.openModalRenameFile}
                                                   _showThumbnail={this.__showThumbnail} 
-                                                  _hideThumbnail={this.__hideThumbnail}/>
+                                                  _hideThumbnail={this.__hideThumbnail}
+                                                  showPicture={this._showPicture} />
       </div>
     );
   }

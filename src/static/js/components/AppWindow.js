@@ -5,6 +5,7 @@ import ModalCreateDir from './ModalCreateDir';
 import ModalRemoveItem from './ModalRemoveItem';
 import ModalPasteItems from './ModalPasteItems';
 import ModalUploadFiles from './ModalUploadFiles';
+import ModalShowPicture from './ModalShowPicture';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 
@@ -52,7 +53,7 @@ const styles = theme => ({
 
 const LightTooltip = withStyles(theme => ({
   tooltip: {
-    backgroundColor: 'rgba(255, 255, 255, 0.4)',
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
     color: 'rgba(0, 0, 0, 0.9)',
     boxShadow: theme.shadows[1],
     fontSize: 12,
@@ -68,6 +69,7 @@ class AppWindow extends Component {
 						OpenModalRemoveItem: false,
 						OpenModalUploadFiles: false,
 						OpenModalPasteItems: false,
+            OpenModalShowPicture:false,
 						ClearListItemsForDelete: false,
 						dirChecked: {},
 						filesChecked: {},
@@ -77,6 +79,7 @@ class AppWindow extends Component {
             dirPath: [],
             showThumbnail: false,
             fileThumbnail: '',
+            filePicture: '',
 	};
 
   componentWillMount() {
@@ -85,6 +88,10 @@ class AppWindow extends Component {
 
 	replaceSpace(str) {
 		return str.replace( /\s/g, "%20" );
+	}
+  
+  placeSpace(str) {
+		return str.replace( /%20/g, " " );
 	}
 
   setItems = (data, path) => {
@@ -208,7 +215,18 @@ class AppWindow extends Component {
 	openModalPasteItem = () => {
 		this.setState({ OpenModalPasteItems: true });
 	}
+  
+  openModalShowPicture = (name) => {
+		this.setState({ OpenModalShowPicture: true });
+    this.setState({ filePicture: name });
+//    console.log("show pic--", this.state.OpenModalShowPicture);
+	}
 	
+  closeModalShowPicture = () => {
+		this.setState({ OpenModalShowPicture: false });
+    this.setState({ filePicture: '' });
+//    console.log("close pic--", this.state.OpenModalShowPicture);
+	}
 /*	async function agetPost(e) {
 		let response = await fetch('upload', { method: 'POST', body: e, });
 		let data = await response.json();
@@ -343,6 +361,17 @@ class AppWindow extends Component {
 		}
 	}
 	
+  decodeFilename(str){
+    var i = str.toLowerCase().indexOf('utf-8');
+    if ( i != -1) {
+      i = i + 7;
+      let n = str.substr(i);
+      return decodeURIComponent(escape(unescape(n)));
+    }
+    else
+      return str.replace('attachment; filename=','');
+  }
+  
 	downloadItem = () => {
 		var obj = this.state.filesChecked;
 		for (let key in obj) {
@@ -351,11 +380,11 @@ class AppWindow extends Component {
 			xhr.responseType = "blob";
 			xhr.onload = (event) => {
 				let header = xhr.getResponseHeader('Content-Disposition');
-				let fileName = header.replace("attachment; filename=","");
+				let fileName = this.decodeFilename(header);
 				let blob = xhr.response;
 				//reset checkbox in item = obj[key]
 				for (var i in this.state.items) {
-					if (this.state.items[i].name == obj[key]) this.state.items[i].checked = false;
+					if (this.state.items[i].name == this.placeSpace(obj[key])) this.state.items[i].checked = false;
 				}
 				//remove item from list of checked files
 				delete obj[key];
@@ -509,7 +538,7 @@ class AppWindow extends Component {
         <Grid item style={{width:"20%", height:"30em"}} >
           <Paper square={true} className={classes.paper} >
             
-              <img src={'show/' + this.state.fileThumbnail} className={classes.img}
+              <img src={'preview/' + this.state.fileThumbnail} className={classes.img}
                    style={{visibility: (this.state.showThumbnail) ? "visible": "hidden"}} />
             
           </Paper>
@@ -529,7 +558,8 @@ class AppWindow extends Component {
                                           ___setDelItem={this.setDelItem}	
                                           ___addToBundle={this.addToBundleFinal} 
                                           ___showThumbnail={this.showThumbnail} 
-                                          ___hideThumbnail={this.hideThumbnail} />
+                                          ___hideThumbnail={this.hideThumbnail} 
+                                          __showPicture={this.openModalShowPicture} />
             </Paper>
           </Grid>
         </Grid>
@@ -555,6 +585,11 @@ class AppWindow extends Component {
 								  removeItemFromContent={this.removeFromBundle}
 								  closeWindow={()=>this.setState({ OpenModalPasteItems: false })}		
 								  items={this.state.itemsForCopyOrMove} />
+                  
+        <ModalShowPicture openWindow={this.state.OpenModalShowPicture}
+                          closeWindow={this.closeModalShowPicture}        
+                          file={this.state.filePicture} />
+
     </>              
 			
 		);

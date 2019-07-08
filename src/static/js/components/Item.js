@@ -112,17 +112,22 @@ class Item extends Component {
 				console.log('Right click', e, name);
 			}
 		}
-    }
+  }
 	
+  handleShowPicture = (name) => {
+    this.props.showPicture(name);
+//    console.log('click show picture', name);
+  }
+  
 	handleOnMouseEnter = (e) => {
 //    console.log("handleOnMouseEnter", this.state.showButtons);
 		this.setState({ showButtons: false });
-	};
+	}
 	
 	handleOnMouseLeave = (e) => {
 //    console.log("handleOnMouseLeave", this.state.showButtons);
 		this.setState({ showButtons: true });
-  };
+  }
 	
 	addToBundle = (name, type, act) => {
 		this.props._addToBundle(name, type, act);
@@ -142,7 +147,7 @@ class Item extends Component {
 	const {classes} = this.props;
 	const {file} = this.props;
 	const keyItem = this.props.keyItem;
-  const pictures = ['.jpg', 'jpeg', '.svg', '.png', '.gif', '.bmp', '.ico'];
+  const pictures = ['.jpg', 'jpeg', '.svg', '.png', '.gif', '.bmp', '.ico', 'webp'];
   //`${file.name}`
   
   let FileOrDir;
@@ -159,10 +164,9 @@ class Item extends Component {
 				</Grid> )
   else if (pictures.some(n => n === file.name.slice(-4).toLowerCase()))
 		FileOrDir =	(<Grid container direction="row" style={{width:"70%"}} id="myFile" 
-              onClick={(e)=>this.handleClickItem(e, file.name)} 
-							onContextMenu={(e)=>this.handleClickItem(e, file.name)} className={classes.item} tooltip={file.name}>
+              onClick={()=>this.handleShowPicture(file.name)} className={classes.item} tooltip={file.name}>
           <Grid item style={{width:"15%",display:"flex"}}>
-              <img  src={'show2/' + file.name} className={classes.thumbnail} 
+              <img  src={'show/' + file.name} className={classes.thumbnail} 
                     onMouseOver={() => this.showThumbnail(file.name)} 
                     onMouseOut={() => this.hideThumbnail()} />
           </Grid>
@@ -174,7 +178,7 @@ class Item extends Component {
    else 
     FileOrDir =	(<Grid container direction="row" style={{width:"70%"}} id="myFile" 
               onClick={(e)=>this.handleClickItem(e, file.name)} 
-							onContextMenu={(e)=>this.handleClickItem(e, file.name)} className={classes.item} tooltip={file.name}>
+              onContextMenu={(e)=>this.handleClickItem(e, file.name)} className={classes.item} tooltip={file.name}>
           <Grid item style={{width:"15%",display:"flex"}}>
               <img src={require('../img/App-generic.svg')} className={classes.image48} />
           </Grid>

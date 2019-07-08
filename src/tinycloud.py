@@ -167,7 +167,7 @@ def fileDownload():
     #For windows you need to use drive name [ex: F:/Example.pdf]
     source = replacer(load_dir())
     data = request.data.decode('utf8')
-    print("data-- %s" % request.data)
+    print("data-- %s" % data)
     data2 = json.loads(data)
     #data = request.form.to_dict()
     print("request-- %s" % data2['item'])
@@ -230,13 +230,13 @@ def paste():
           os.rename(source, dst)
     return lsDir(dir)
 
-@app.route('/show/<filename>')
-def show(filename):
+@app.route('/preview/<filename>')
+def preview(filename):
     dir = replacer(load_dir())
     return send_from_directory(dir, filename)
 
-@app.route('/show2/<filename>')
-def show2(filename):
+@app.route('/show/<filename>')
+def show(filename):
     basewidth = 100
     dir = replacer(load_dir())
     if (filename[:3] =='jpg' or filename[:4] =='jpeg'):
