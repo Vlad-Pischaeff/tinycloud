@@ -17,7 +17,7 @@ export default class ModalRenameFile extends React.Component {
 
   handleCloseCancel = () => {
     this.props.closeWindow();
-      this.setState({ name: "" });
+    this.setState({ name: "" });
   };
 
   handleCloseOK = () => {
@@ -25,8 +25,8 @@ export default class ModalRenameFile extends React.Component {
 		$.get(window.location.href + 'rename', 
 			{ "newname": this.state.name,
 			  "oldname": this.props.filename },
-    		(data) => {
-          this.props.___setDirList(data);
+    	(data) => {
+        this.props.___setDirList(data);
 			});
     this.setState({ name: "" });
   };
@@ -44,27 +44,20 @@ export default class ModalRenameFile extends React.Component {
   render() {
     return (
 
-        <Dialog style={{width:"100%"}}
-          open={this.props.openWindow}
-          onEnter={this.handleEnter}
-          onClose={this.handleCloseCancel}
-          aria-labelledby="form-dialog-title">
+        <Dialog style={{width:"100%"}} open={this.props.openWindow}
+                onEnter={this.handleEnter}
+                onClose={this.handleCloseCancel}
+                aria-labelledby="form-dialog-title">
           <DialogTitle id="form-dialog-title">Edit File name</DialogTitle>
+          
           <DialogContent>
             <DialogContentText>
               Change name of your file <b>{this.props.filename}</b>                                   
             </DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="newFileName"
-              type="text"
-              fullWidth
-              value={this.state.name}
-              onChange={e => this.setState({ name: e.target.value })}
-              onKeyPress={this.handleKeyPress}
-            />
+            <TextField autoFocus margin="dense" id="newFileName" type="text" fullWidth value={this.state.name}
+              onChange={e => this.setState({ name: e.target.value })} onKeyPress={this.handleKeyPress} />
           </DialogContent>
+          
           <DialogActions>
             <Button onClick={this.handleCloseCancel} color="primary">
               Cancel
@@ -73,6 +66,7 @@ export default class ModalRenameFile extends React.Component {
               OK
             </Button>
           </DialogActions>
+          
         </Dialog>
 
     );

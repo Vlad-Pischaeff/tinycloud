@@ -39,26 +39,20 @@ export default class ModalCreateDir extends React.Component {
   render() {
     return (
       <div>
-        <Dialog
-          open={this.props.openWindow}
-          onClose={this.handleCloseCancel}
-          aria-labelledby="form-dialog-title">
+        <Dialog open={this.props.openWindow}
+                onClose={this.handleCloseCancel}
+                aria-labelledby="form-dialog-title">
           <DialogTitle id="form-dialog-title">New Directory Name</DialogTitle>
+          
           <DialogContent>
             <DialogContentText>
-				Enter name of your new directory.
+              Enter name of your new directory.
             </DialogContentText>
-            <TextField
-				autoFocus
-				margin="dense"
-				id="newDirName"
-				type="text"
-				fullWidth
-				value={this.state.name}
- 				onChange={e => this.setState({ name: e.target.value })}
-				onKeyPress={this.handleKeyPress}
-            />
+          
+            <TextField autoFocus margin="dense" id="newDirName" type="text" fullWidth value={this.state.name}
+                       onChange={e => this.setState({ name: e.target.value })} onKeyPress={this.handleKeyPress} />
           </DialogContent>
+          
           <DialogActions>
             <Button onClick={this.handleCloseCancel} color="primary">
               Cancel
@@ -67,6 +61,7 @@ export default class ModalCreateDir extends React.Component {
               OK
             </Button>
           </DialogActions>
+        
         </Dialog>
       </div>
     );

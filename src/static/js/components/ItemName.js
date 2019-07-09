@@ -28,16 +28,11 @@ export default class ItemName extends React.Component {
   render() {
   const {name} = this.props;
   
-  const style = this.props.fontWeight 
-          ? { whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            } 
-          : { whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              fontWeight: "bold"
-            };
+  const style = { whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  fontWeight: this.props.fontWeight
+                };
   //console.log('style--', style, this.props.fontWeight);
   
   const Name = <div style={style}>

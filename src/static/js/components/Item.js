@@ -34,12 +34,6 @@ const styles = theme => ({
     paddingTop: "0", 
     paddingBottom: "0",
   },
-  inline: {
-    fontWeight: "normal",
-    '&:hover': {
-      fontWeight: "bold",
-    },
-  }
 });
 
 var $ = require('jquery');
@@ -158,7 +152,7 @@ class Item extends Component {
             <img src={require('../img/Folder-blue.svg')} className={classes.image48} />
           </Grid>
           <Grid item style={{width:"85%"}}>
-              <ListItemText primary={<ItemName name={file.name} fontWeight={this.state.showButtons} />} 
+              <ListItemText primary={<ItemName name={file.name} fontWeight={this.state.showButtons ? 'normal' : 'bold'} />} 
                             secondary={file.date} style={{width:"100%"}} />
           </Grid>
 				</Grid> )
@@ -171,7 +165,7 @@ class Item extends Component {
                     onMouseOut={() => this.hideThumbnail()} />
           </Grid>
           <Grid item style={{width:"85%"}}>
-              <ListItemText primary={<ItemName name={file.name} fontWeight={this.state.showButtons} />} 
+              <ListItemText primary={<ItemName name={file.name} fontWeight={this.state.showButtons ? 'normal' : 'bold'} />} 
                             secondary={file.date + "   Size: " + file.size} style={{width:"100%"}} />
           </Grid>
 				</Grid> )
@@ -183,7 +177,7 @@ class Item extends Component {
               <img src={require('../img/App-generic.svg')} className={classes.image48} />
           </Grid>
           <Grid item style={{width:"85%"}}>
-              <ListItemText primary={<ItemName name={file.name} fontWeight={this.state.showButtons} />} 
+              <ListItemText primary={<ItemName name={file.name} fontWeight={this.state.showButtons ? 'normal' : 'bold'} />} 
                             secondary={file.date + "   Size: " + file.size} style={{width:"100%"}} />
           </Grid>
 				</Grid> );

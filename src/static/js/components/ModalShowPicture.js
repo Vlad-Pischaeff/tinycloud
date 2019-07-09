@@ -30,7 +30,7 @@ class ModalShowPicture extends React.Component {
       <Dialog open={this.props.openWindow} aria-labelledby="form-dialog-title"  style={{padding: 0}} >
         
             <img src={'preview/' + this.props.file} className={classes.image} />
-            <IconButton aria-label="Close" className={classes.button} onClick={()=>this.props.closeWindow()} >
+            <IconButton aria-label="Close" className={classes.button} onClick={this.props.closeWindow} >
               <CloseIcon />
             </IconButton>
 

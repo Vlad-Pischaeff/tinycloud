@@ -16,13 +16,14 @@ var $ = require('jquery');
 
 export default class ModalPasteItems extends React.Component {
   
-	handleClose = () => {
+/*	handleClose = () => {
 		this.props.closeWindow();
 	};
 	
 	handleClear = () => {
 		this.props.clearContent();
 	}
+*/
 	
 	handlePaste = (name, path, action) => {
 		$.get(window.location.href + 'paste', 
@@ -33,7 +34,6 @@ export default class ModalPasteItems extends React.Component {
 				this.props.listContent(data);
 			});
 		this.props.removeItemFromContent(name);
-//		console.log("paste--", name, path, action);
 	};
   
 	render() {
@@ -42,8 +42,8 @@ export default class ModalPasteItems extends React.Component {
 		const pasteElements = items.map((element) =>
 				<div>
 				<ListItem>
-					<ListItemText primary={<ItemName name={element['name']} fontWeight="false" />} 
-                        secondary={<ItemName name={element['path']} fontWeight="false" />} />
+					<ListItemText primary={<ItemName name={element['name']} fontWeight="normal" />} 
+                        secondary={<ItemName name={element['path']} fontWeight="normal" />} />
 					<Tooltip title={element['action'] + " Item"}>
 					<Button size="small" variant="outlined" color="primary" style={{marginLeft: '1em'}}
 							onClick={() => this.handlePaste(element['name'], element['path'], element['action'])} >
@@ -56,11 +56,11 @@ export default class ModalPasteItems extends React.Component {
 						
 	return (
 		
-    <Dialog open={this.props.openWindow} onClose={this.handleClose}	aria-labelledby="form-dialog">
+    <Dialog open={this.props.openWindow} onClose={this.props.closeWindow}	aria-labelledby="form-dialog">
 
 			<DialogTitle id="form-dialog-title">Paste listed items&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			  <IconButton aria-label="Close" style={{position: 'absolute', right: "4px", top: "4px"}} 
-                    onClick={this.handleClose} >
+                    onClick={this.props.closeWindow} >
 					<CloseIcon />
 				</IconButton>
 			</DialogTitle>
@@ -70,7 +70,7 @@ export default class ModalPasteItems extends React.Component {
 			</DialogContent>
       
 			<DialogActions>
-				<Button onClick={this.handleClear} color="primary">
+				<Button onClick={this.props.clearContent} color="primary">
 					Clear
 				</Button>
 			</DialogActions>
