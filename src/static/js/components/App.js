@@ -1,25 +1,36 @@
 import React, { Component } from 'react';
-import AppLogo from './AppLogo'
-import MenuGlobal from './MenuGlobal'
-import AppWindow from './AppWindow'
+import AppLogo from './AppLogo';
+import MenuGlobal from './MenuGlobal';
+import AppWindow from './AppWindow';
 import Grid from '@material-ui/core/Grid';
+import { withStyles } from '@material-ui/core/styles';
 
+const styles = theme => ({
+  item: {
+    height: '24px', 
+    width: '100%', 
+    lineHeight: '1.5', 
+    backgroundImage: 'linear-gradient(to right, rgba(51, 72, 150, 1), rgba(9, 104, 175, 1))',
+  },
+});
 
 class App extends Component {
   render() {
-    return (
+  const { classes } = this.props;
+  
+  return (
 
 		<Grid container direction="column">
 
-			<Grid item style={{height:"24px", width:"100%", lineHeight: "1.5"}} >
+			<Grid item className={classes.item} >
 				<AppLogo />
 			</Grid>
 			
-			<Grid item style={{height:"24px", width:"100%", lineHeight: "1.5"}} >
+			<Grid item className={classes.item} >
 				<MenuGlobal />
 			</Grid>
 
-			<Grid item style={{height:"70vh"}} >
+			<Grid item style={{height: '80vh'}} >
 				<AppWindow />
 			</Grid>
 
@@ -29,4 +40,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withStyles(styles)(App);
