@@ -33,7 +33,6 @@ export default class ItemName extends React.Component {
                   textOverflow: "ellipsis",
                   fontWeight: this.props.fontWeight
                 };
-  //console.log('style--', style, this.props.fontWeight);
   
   const Name = <div style={style}>
                  <Tooltip title={this.placeSpace(name)} placement="top-start">

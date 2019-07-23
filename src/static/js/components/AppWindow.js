@@ -40,6 +40,11 @@ const styles = theme => ({
     backgroundColor: "white",
     border: "1px solid grey",
     borderRadius: '1em',
+/*    transition: 'all 0.2s cubic-bezier(0.2, 0.9, 0.3, 1.4)',
+    '&:hover': {
+      height: '1.7em',
+      width: '1.7em',
+    },*/
   },
   paper:{
     width: '100%', 

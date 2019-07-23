@@ -16,15 +16,6 @@ var $ = require('jquery');
 
 export default class ModalPasteItems extends React.Component {
   
-/*	handleClose = () => {
-		this.props.closeWindow();
-	};
-	
-	handleClear = () => {
-		this.props.clearContent();
-	}
-*/
-	
 	handlePaste = (name, path, action) => {
 		$.get(window.location.href + 'paste', 
 			{ "name": name,

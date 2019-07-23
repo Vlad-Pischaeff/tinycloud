@@ -12,6 +12,21 @@ const styles = theme => ({
     lineHeight: '1.5', 
     backgroundImage: 'linear-gradient(to right, rgba(51, 72, 150, 1), rgba(9, 104, 175, 1))',
   },
+  text: {
+    fontFamily: 'OCR A Extended V3',
+    fontSize: '1.5em',
+    fontStyle: 'normal',
+    color: '#FFFFFF',
+    position: 'absolute',
+    right: '10px',
+    top: '5px',
+    letterSpacing: '1.6px',
+    animation: '$slidein ease-out 5s infinite alternate',
+  },
+  '@keyframes slidein': {
+    from:  {textShadow: 'none',},
+    to:    {textShadow: '0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #FFF, 0 0 30px #FFF, 0 0 40px #FFF, 0 0 55px #FFF, 0 0 75px #FFF',}
+  }
 });
 
 class App extends Component {
@@ -23,11 +38,11 @@ class App extends Component {
 		<Grid container direction="column">
 
 			<Grid item className={classes.item} >
-				<AppLogo />
+				
 			</Grid>
 			
 			<Grid item className={classes.item} >
-				<MenuGlobal />
+				<div className={classes.text}> tinyCLOUD </div>
 			</Grid>
 
 			<Grid item style={{height: '80vh'}} >
