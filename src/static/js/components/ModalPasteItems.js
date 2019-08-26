@@ -16,55 +16,55 @@ var $ = require('jquery');
 
 export default class ModalPasteItems extends React.Component {
 
-	handlePaste = (name, path, action) => {
-		$.get(window.location.href + 'paste', 
-			{ "name": name,
-			  "path": path,
-			  "act" : action, },
-			(data) => this.props.listContent(data));
-		this.props.removeItemFromContent(name);
-	};
+   handlePaste = (name, path, action) => {
+      $.get(window.location.href + 'paste', 
+         { "name": name,
+           "path": path,
+           "act" : action, },
+         (data) => this.props.listContent(data));
+      this.props.removeItemFromContent(name);
+   };
 
-	render() {
-		const {items} = this.props;
+   render() {
+   const {items} = this.props;
 
-		const pasteElements = items.map((element) =>
-				<div>
-				<ListItem>
-					<ListItemText primary={<ItemName name={element['name']} fontWeight="normal" />} 
-										secondary={<ItemName name={element['path']} fontWeight="normal" />} />
-					<Tooltip title={element['action'] + " Item"}>
-					<Button size="small" variant="outlined" color="primary" style={{marginLeft: '1em'}}
-							onClick={() => this.handlePaste(element['name'], element['path'], element['action'])} >
-						<GetApp />
-					</Button>
-					</Tooltip>
-				</ListItem>
-				</div>
-				);
-						
-	return (
-		<Dialog open={this.props.openWindow} onClose={this.props.closeWindow}	aria-labelledby="form-dialog">
+   const pasteElements = items.map((element) =>
+      <div>
+         <ListItem>
+            <ListItemText primary={<ItemName name={element['name']} fontWeight="normal" />} 
+                          secondary={<ItemName name={element['path']} fontWeight="normal" />} />
+            <Tooltip title={element['action'] + " Item"}>
+               <Button size="small" variant="outlined" color="primary" style={{marginLeft: '1em'}}
+                       onClick={() => this.handlePaste(element['name'], element['path'], element['action'])} >
+                  <GetApp />
+               </Button>
+            </Tooltip>
+         </ListItem>
+      </div>
+   );
 
-			<DialogTitle id="form-dialog-title">Paste listed items&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			  <IconButton aria-label="Close" style={{ position: 'absolute', right: "4px", top: "4px" }} 
-								onClick={this.props.closeWindow} >
-					<CloseIcon />
-				</IconButton>
-			</DialogTitle>
+      return (
+         <Dialog open={this.props.openWindow} onClose={this.props.closeWindow}	aria-labelledby="form-dialog">
 
-			<DialogContent>
-				{pasteElements}
-			</DialogContent>
+            <DialogTitle id="form-dialog-title">Paste listed items&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+               <IconButton aria-label="Close" style={{ position: 'absolute', right: "4px", top: "4px" }} 
+                           onClick={this.props.closeWindow} >
+                  <CloseIcon />
+               </IconButton>
+            </DialogTitle>
 
-			<DialogActions>
-				<Button onClick={this.props.clearContent} color="primary">
-					Clear
-				</Button>
-			</DialogActions>
+            <DialogContent>
+               {pasteElements}
+            </DialogContent>
 
-		</Dialog>
-		);
-	}
+            <DialogActions>
+               <Button onClick={this.props.clearContent} color="primary">
+                  Clear
+               </Button>
+               </DialogActions>
+
+         </Dialog>
+      );
+   }
 }
 

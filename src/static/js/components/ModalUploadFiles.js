@@ -9,33 +9,33 @@ import Avatar from '@material-ui/core/Avatar';
 
 export default class ModalUploadFiles extends React.Component {
 
-	render() {
-		
-		const uploadElements = Object.keys(this.props.state).map((n) =>
-				<div>
-				<ListItem>
-					<Avatar style={{marginRight:"1rem"}}>
-						<CircularProgress variant="static" value={this.props.state[n]} />
-						<div style={{ position:"absolute" }}>{this.props.state[n]}</div>
-					</Avatar>
-					<ListItemText primary={n} />
-				</ListItem>
-				</div>
-				);
+   render() {
 
-		return (
+   const uploadElements = Object.keys(this.props.state).map((n) =>
+         <div>
+            <ListItem>
+               <Avatar style={{marginRight:"1rem"}}>
+                  <CircularProgress variant="static" value={this.props.state[n]} />
+                  <div style={{ position:"absolute" }}>{this.props.state[n]}</div>
+               </Avatar>
+               <ListItemText primary={n} />
+            </ListItem>
+         </div>
+   );
 
-		<Dialog	open={this.props.openWindow} aria-labelledby="form-dialog-title">
+      return (
 
-			<DialogTitle id="form-dialog-title">Uploading files</DialogTitle>
+      <Dialog	open={this.props.openWindow} aria-labelledby="form-dialog-title">
 
-			<DialogContent>
-				{uploadElements}
-			</DialogContent>
+         <DialogTitle id="form-dialog-title">Uploading files</DialogTitle>
 
-		</Dialog>
+         <DialogContent>
+            {uploadElements}
+         </DialogContent>
 
-		);
-	}
+      </Dialog>
+
+      );
+   }
 }
 

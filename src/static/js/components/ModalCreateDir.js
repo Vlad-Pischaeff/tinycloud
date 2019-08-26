@@ -11,54 +11,54 @@ var $ = require('jquery');
 
 export default class ModalCreateDir extends React.Component {
 
-	state = {
-		name: "",
-	};
+   state = {
+      name: "",
+   };
 
-	handleCloseCancel = () => {
-		this.props.closeWindow();
-		this.setState({ name: "" });
-	};
+   handleCloseCancel = () => {
+      this.props.closeWindow();
+      this.setState({ name: "" });
+   };
 
-	handleCloseOK = () => {
-		this.props.closeWindow();
-		$.get(window.location.href + 'mkdir', 
-			{ "dir": this.state.name },
-			(data) => this.props.callbackMkDir(data));
-		this.setState({ name: "" });
-	};
+   handleCloseOK = () => {
+      this.props.closeWindow();
+      $.get(window.location.href + 'mkdir', 
+         { "dir": this.state.name },
+         (data) => this.props.callbackMkDir(data));
+      this.setState({ name: "" });
+   };
 
-	handleKeyPress = (e) => {
-		if (e.key === 'Enter') this.handleCloseOK();
-	}
+   handleKeyPress = (e) => {
+      if (e.key === 'Enter') this.handleCloseOK();
+   }
 
-	render() {
-		return (
-		<div>
-			<Dialog open={this.props.openWindow} onClose={this.handleCloseCancel} aria-labelledby="form-dialog-title">
+   render() {
+      return (
 
-				<DialogTitle id="form-dialog-title">New Directory Name</DialogTitle>
+         <Dialog open={this.props.openWindow} onClose={this.handleCloseCancel} aria-labelledby="form-dialog-title">
 
-				<DialogContent>
-					<DialogContentText>
-						Enter name of your new directory.
-					</DialogContentText>
-					<TextField autoFocus margin="dense" id="newDirName" type="text" fullWidth value={this.state.name}
-									onChange={e => this.setState({ name: e.target.value })} onKeyPress={this.handleKeyPress} />
-				</DialogContent>
+            <DialogTitle id="form-dialog-title">New Directory Name</DialogTitle>
 
-				<DialogActions>
-					<Button onClick={this.handleCloseCancel} color="primary">
-						Cancel
-					</Button>
-					<Button onClick={this.handleCloseOK} color="primary">
-						OK
-					</Button>
-				</DialogActions>
+            <DialogContent>
+               <DialogContentText>
+                  Enter name of your new directory.
+               </DialogContentText>
+               <TextField autoFocus margin="dense" id="newDirName" type="text" fullWidth value={this.state.name}
+                          onChange={e => this.setState({ name: e.target.value })} onKeyPress={this.handleKeyPress} />
+            </DialogContent>
 
-			</Dialog>
-		</div>
-		);
-	}
+            <DialogActions>
+               <Button onClick={this.handleCloseCancel} color="primary">
+                  Cancel
+               </Button>
+               <Button onClick={this.handleCloseOK} color="primary">
+                  OK
+               </Button>
+            </DialogActions>
+
+         </Dialog>
+
+      );
+   }
 }
 

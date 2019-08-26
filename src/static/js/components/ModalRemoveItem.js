@@ -10,47 +10,43 @@ var $ = require('jquery');
 
 export default class ModalRemoveItem extends React.Component {
 
-/*	handleCloseCancel = () => {
-		this.props.closeWindow();
-	};*/
+   handleCloseOK = () => {
+      this.props.callbackRemoveItem();
+      this.props.closeWindow();
+   };
 
-	handleCloseOK = () => {
-		this.props.callbackRemoveItem();
-		this.props.closeWindow();
-	};
+   handleKeyPress = (e) => {
+      if (e.key === 'Enter') this.handleCloseOK();
+   }
 
-	handleKeyPress = (e) => {
-		if (e.key === 'Enter') this.handleCloseOK();
-	}
+   render() {
+      return (
 
-	render() {
-		return (
+         <Dialog open={this.props.openWindow}
+                  onClose={this.props.closeWindow}
+                  onKeyPress={this.handleKeyPress}
+                  aria-labelledby="form-dialog-title">
 
-			<Dialog open={this.props.openWindow}
-						onClose={this.props.closeWindow}
-						onKeyPress={this.handleKeyPress}
-						aria-labelledby="form-dialog-title">
+            <DialogTitle id="form-dialog-title">Are you shure to remove this tiems?</DialogTitle>
 
-				<DialogTitle id="form-dialog-title">Are you shure to remove this tiems?</DialogTitle>
+            <DialogContent>
+               <DialogContentText>
+                  It is unsafe operation
+               </DialogContentText>
+            </DialogContent>
 
-				<DialogContent>
-					<DialogContentText>
-						It is unsafe operation
-					</DialogContentText>
-				</DialogContent>
+            <DialogActions>
+               <Button onClick={this.props.closeWindow} color="primary">
+                  Cancel
+               </Button>
+               <Button onClick={this.handleCloseOK} color="primary">
+                  OK
+               </Button>
+            </DialogActions>
 
-				<DialogActions>
-					<Button onClick={this.props.closeWindow} color="primary">
-						Cancel
-					</Button>
-					<Button onClick={this.handleCloseOK} color="primary">
-						OK
-					</Button>
-				</DialogActions>
+         </Dialog>
 
-			</Dialog>
-
-		);
-	}
+      );
+   }
 }
 

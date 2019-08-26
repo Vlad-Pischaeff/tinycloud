@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 
 
 class MenuGlobal extends Component {
-	render() {
-		return (
-			<div className="Reserved" > 
+   render() {
+      return (
+         <div className="Reserved" > 
 
-			</div>
-		);
-	}
+         </div>
+      );
+   }
 }
 
 export default MenuGlobal;
