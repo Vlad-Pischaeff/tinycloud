@@ -10,47 +10,47 @@ var $ = require('jquery');
 
 export default class ModalRemoveItem extends React.Component {
 
-  handleCloseCancel = () => {
-	this.props.closeWindow();
-  };
+/*	handleCloseCancel = () => {
+		this.props.closeWindow();
+	};*/
 
-  handleCloseOK = () => {
-	this.props.callbackRemoveItem();
-	this.props.closeWindow();
-  };
-  
-  handleKeyPress = (e) => {
-	if (e.key === 'Enter') {
-		this.handleCloseOK();
+	handleCloseOK = () => {
+		this.props.callbackRemoveItem();
+		this.props.closeWindow();
+	};
+
+	handleKeyPress = (e) => {
+		if (e.key === 'Enter') this.handleCloseOK();
 	}
-  }
 
-  render() {
-    return (
-      <div>
-        <Dialog
-          open={this.props.openWindow}
-          onClose={this.handleCloseCancel}
-		  onKeyPress={this.handleKeyPress}
-          aria-labelledby="form-dialog-title"
-        >
-          <DialogTitle id="form-dialog-title">Are you shure to remove this tiems?</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              It is unsafe operation
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.handleCloseCancel} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={this.handleCloseOK} color="primary">
-              OK
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </div>
-    );
-  }
+	render() {
+		return (
+
+			<Dialog open={this.props.openWindow}
+						onClose={this.props.closeWindow}
+						onKeyPress={this.handleKeyPress}
+						aria-labelledby="form-dialog-title">
+
+				<DialogTitle id="form-dialog-title">Are you shure to remove this tiems?</DialogTitle>
+
+				<DialogContent>
+					<DialogContentText>
+						It is unsafe operation
+					</DialogContentText>
+				</DialogContent>
+
+				<DialogActions>
+					<Button onClick={this.props.closeWindow} color="primary">
+						Cancel
+					</Button>
+					<Button onClick={this.handleCloseOK} color="primary">
+						OK
+					</Button>
+				</DialogActions>
+
+			</Dialog>
+
+		);
+	}
 }
 

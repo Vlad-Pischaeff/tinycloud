@@ -16,24 +16,24 @@ export default class ModalUploadFiles extends React.Component {
 				<ListItem>
 					<Avatar style={{marginRight:"1rem"}}>
 						<CircularProgress variant="static" value={this.props.state[n]} />
-            <div style={{position:"absolute"}}>{this.props.state[n]}</div>
+						<div style={{ position:"absolute" }}>{this.props.state[n]}</div>
 					</Avatar>
 					<ListItemText primary={n} />
 				</ListItem>
 				</div>
 				);
-						
+
 		return (
 
-      <Dialog	open={this.props.openWindow} aria-labelledby="form-dialog-title">
-        
-        <DialogTitle id="form-dialog-title">Uploading files</DialogTitle>
-        
-        <DialogContent>
-          {uploadElements}
-        </DialogContent>
-      
-      </Dialog>
+		<Dialog	open={this.props.openWindow} aria-labelledby="form-dialog-title">
+
+			<DialogTitle id="form-dialog-title">Uploading files</DialogTitle>
+
+			<DialogContent>
+				{uploadElements}
+			</DialogContent>
+
+		</Dialog>
 
 		);
 	}

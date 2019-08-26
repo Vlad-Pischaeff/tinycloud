@@ -11,65 +11,60 @@ var $ = require('jquery');
 
 export default class ModalRenameFile extends React.Component {
 
-  state = {
-    name:"",
-  };
+	state = {
+		name: "",
+	};
 
-  handleCloseCancel = () => {
-    this.props.closeWindow();
-    this.setState({ name: "" });
-  };
+	handleCloseCancel = () => {
+		this.props.closeWindow();
+		this.setState({ name: "" });
+	};
 
-  handleCloseOK = () => {
-    this.props.closeWindow();
+	handleCloseOK = () => {
+		this.props.closeWindow();
 		$.get(window.location.href + 'rename', 
 			{ "newname": this.state.name,
 			  "oldname": this.props.filename },
-    	(data) => {
-        this.props.___setDirList(data);
-			});
-    this.setState({ name: "" });
-  };
+			(data) => this.props.___setDirList(data));
+		this.setState({ name: "" });
+	};
 
-  handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      this.handleCloseOK();
-    }
-  }
-  
-  handleEnter = () => {
-    this.setState({ name: this.props.filename });
-  }
-  
-  render() {
-    return (
+	handleKeyPress = (e) => {
+		if (e.key === 'Enter') this.handleCloseOK();
+	}
 
-        <Dialog style={{width:"100%"}} open={this.props.openWindow}
-                onEnter={this.handleEnter}
-                onClose={this.handleCloseCancel}
-                aria-labelledby="form-dialog-title">
-          <DialogTitle id="form-dialog-title">Edit File name</DialogTitle>
-          
-          <DialogContent>
-            <DialogContentText>
-              Change name of your file <b>{this.props.filename}</b>                                   
-            </DialogContentText>
-            <TextField autoFocus margin="dense" id="newFileName" type="text" fullWidth value={this.state.name}
-              onChange={e => this.setState({ name: e.target.value })} onKeyPress={this.handleKeyPress} />
-          </DialogContent>
-          
-          <DialogActions>
-            <Button onClick={this.handleCloseCancel} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={this.handleCloseOK} color="primary">
-              OK
-            </Button>
-          </DialogActions>
-          
-        </Dialog>
+	handleEnter = () => {
+		this.setState({ name: this.props.filename });
+	}
 
-    );
-  }
+	render() {
+		return (
+
+			<Dialog style={{ width:"100%" }} open={this.props.openWindow}
+						onEnter={this.handleEnter} onClose={this.handleCloseCancel} aria-labelledby="form-dialog-title">
+
+				<DialogTitle id="form-dialog-title">Edit File name</DialogTitle>
+
+				<DialogContent>
+					<DialogContentText>
+						Change name of your file <b>{this.props.filename}</b>                                   
+					</DialogContentText>
+					<TextField autoFocus margin="dense" id="newFileName" type="text" fullWidth value={this.state.name}
+									onChange={e => this.setState({ name: e.target.value })} onKeyPress={this.handleKeyPress} />
+				</DialogContent>
+
+				<DialogActions>
+					<Button onClick={this.handleCloseCancel} color="primary">
+						Cancel
+					</Button>
+					<Button onClick={this.handleCloseOK} color="primary">
+						OK
+					</Button>
+				</DialogActions>
+
+			</Dialog>
+
+		);
+	}
 }
 
