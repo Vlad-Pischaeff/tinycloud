@@ -102,7 +102,7 @@ def cd():
 @app.route("/cdrand", methods=["GET", "POST"])
 def cdrand():
     dir = HOME_DIR
-    dir = dir + '/' + request.args['dir']
+    dir = dir + '/' + request.json['dir']
     os.chdir(replacer(dir))
     save_dir(dir)
     return lsDir(dir)

@@ -47,7 +47,7 @@ export default class ModalRenameFile extends React.Component {
 
             <DialogContent>
                <DialogContentText>
-                  Change name of your file <b>{this.props.filename}</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  Change name of your file <b>{this.props.filename}</b>
                </DialogContentText>
                <TextField autoFocus margin="dense" id="newFileName" type="text" fullWidth value={this.state.name}
                           onChange={e => this.setState({ name: e.target.value })} onKeyPress={this.handleKeyPress} />

@@ -8,7 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import HomeIcon from '@material-ui/icons/Home';
 import Grid from '@material-ui/core/Grid';
 
-var $ = require('jquery');
+//var $ = require('jquery');
 
 const styles = theme => ({
    button: {
@@ -47,13 +47,39 @@ class AppBreadcrumbs extends Component {
       return str.replace( /%20/g, " " );
    }
 
+   fetchData = (point, str, obj, fn) => {
+      let url = window.location.href + point;
+      var data = { "dir": str };
+      fetch(url, {
+         method: 'POST', // or 'PUT'
+         body: JSON.stringify(data), // data may be `string` or {object}!
+         headers: { 'Content-Type': 'application/json' }
+      })
+      .then(res => res.json())
+      .then(response => fn(response, obj))
+      .catch(error => console.error('cdrand ERR--:', error));
+   }
+
    handleClick = (index) => {
-      if (index < this.props.dirPath.length-1) {
-         var obj = this.props.dirPath.filter((n,i) => (i <= index));
+      let path = this.props.dirPath;
+      if (index < path.length - 1) {
+         var obj = path.filter((n, i) => (i <= index));
          var str = obj.join('/');
-         $.get(window.location.href + 'cdrand',
+         /*$.get(window.location.href + 'cdrand',
             { "dir": str },
-            (data) => this.props.setItems(data, obj));
+            (data) => this.props.setItems(data, obj) );*/
+
+         this.fetchData('cdrand', str, obj, this.props.setItems);
+         /*let url = window.location.href + 'cdrand';
+         var data = { "dir": str };
+         fetch(url, {
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(data), // data may be `string` or {object}!
+            headers: { 'Content-Type': 'application/json' }
+         })
+         .then(res => res.json())
+         .then(response => this.props.setItems(response, obj))
+         .catch(error => console.error('cdrand ERR--:', error));*/
       }
    }
 
@@ -62,7 +88,7 @@ class AppBreadcrumbs extends Component {
    const listBreadcrumbs = this.props.dirPath.map((n,i) =>
       <>
          <Button color="inherit" className={classes.button} onClick={() => this.handleClick(i)}>
-            <div className={classes.text} > {this.placeSpace(n)} </div>
+            <div className={classes.text}> {this.placeSpace(n)} </div>
          </Button>
       </>
    );
