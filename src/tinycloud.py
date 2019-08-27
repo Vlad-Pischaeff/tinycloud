@@ -94,7 +94,8 @@ def ls():
 @app.route("/cd", methods=["GET", "POST"])
 def cd():
     dir = load_dir()
-    dir = dir + '/' + request.args['dir']
+    #dir = dir + '/' + request.args['dir']
+    dir = dir + '/' + request.json['dir']
     os.chdir(replacer(dir))
     save_dir(dir)
     return lsDir(dir)

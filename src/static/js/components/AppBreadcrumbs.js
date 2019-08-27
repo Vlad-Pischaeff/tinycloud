@@ -68,23 +68,12 @@ class AppBreadcrumbs extends Component {
          /*$.get(window.location.href + 'cdrand',
             { "dir": str },
             (data) => this.props.setItems(data, obj) );*/
-
          this.fetchData('cdrand', str, obj, this.props.setItems);
-         /*let url = window.location.href + 'cdrand';
-         var data = { "dir": str };
-         fetch(url, {
-            method: 'POST', // or 'PUT'
-            body: JSON.stringify(data), // data may be `string` or {object}!
-            headers: { 'Content-Type': 'application/json' }
-         })
-         .then(res => res.json())
-         .then(response => this.props.setItems(response, obj))
-         .catch(error => console.error('cdrand ERR--:', error));*/
       }
    }
 
    render() {
-   const { classes } = this.props;
+   const { classes, getHomeList } = this.props;
    const listBreadcrumbs = this.props.dirPath.map((n,i) =>
       <>
          <Button color="inherit" className={classes.button} onClick={() => this.handleClick(i)}>
@@ -97,7 +86,7 @@ class AppBreadcrumbs extends Component {
          <Grid container direction="row" style={{ width:'100%' }}>
             <Grid item className={classes.grid}>
 
-               <MyButton onClick={this.props.getHomeList}>
+               <MyButton onClick={getHomeList}>
                   <HomeIcon />
                </MyButton>
 

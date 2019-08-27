@@ -14,6 +14,8 @@ import ItemApplication from './ItemApplication';
 import ItemPicture from './ItemPicture';
 import Typography from '@material-ui/core/Typography';
 
+//var $ = require('jquery');
+
 const styles = theme => ({
    button: {
       width: "40px", 
@@ -29,9 +31,6 @@ const styles = theme => ({
    },
 });
 
-var $ = require('jquery');
-
-
 class Item extends Component {
    state = {
       showButtons: true,
@@ -39,10 +38,24 @@ class Item extends Component {
       str: "",
    };
 
+   fetchData = (point, str, fn) => {
+      let url = window.location.href + point;
+      var data = { "dir": str };
+      fetch(url, {
+         method: 'POST', // or 'PUT'
+         body: JSON.stringify(data), // data may be `string` or {object}!
+         headers: { 'Content-Type': 'application/json' }
+      })
+      .then(res => res.json())
+      .then(response => fn(response, str))
+      .catch(error => console.error('cdrand ERR--:', error));
+   }
+
    openDir = (item) => {
-      $.get(window.location.href + 'cd',
+      this.fetchData('cd', item, this.props._setDirList);
+      /*$.get(window.location.href + 'cd',
          { "dir": item },
-         (data) => this.props._setDirList(data, item));
+         (data) => this.props._setDirList(data, item));*/
    }
 
    setDelItem = (data, i, c, t) => {
