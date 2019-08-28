@@ -12,9 +12,7 @@ import ItemName from './ItemName';
 import ItemDirectory from './ItemDirectory';
 import ItemApplication from './ItemApplication';
 import ItemPicture from './ItemPicture';
-import Typography from '@material-ui/core/Typography';
-
-//var $ = require('jquery');
+import { FetchData, ReplaceSpace } from './functions.js';
 
 const styles = theme => ({
    button: {
@@ -34,25 +32,11 @@ const styles = theme => ({
 class Item extends Component {
    state = {
       showButtons: true,
-      name: "",
-      str: "",
-   };
-
-   fetchData = (point, str, fn) => {
-      let url = window.location.href + point;
-      var data = { "dir": str };
-      fetch(url, {
-         method: 'POST', // or 'PUT'
-         body: JSON.stringify(data), // data may be `string` or {object}!
-         headers: { 'Content-Type': 'application/json' }
-      })
-      .then(res => res.json())
-      .then(response => fn(response, str))
-      .catch(error => console.error('cdrand ERR--:', error));
    }
 
    openDir = (item) => {
-      this.fetchData('cd', item, this.props._setDirList);
+      console.log('cd', item);
+      FetchData('cd', item, item, this.props._setDirList);
       /*$.get(window.location.href + 'cd',
          { "dir": item },
          (data) => this.props._setDirList(data, item));*/
@@ -60,11 +44,7 @@ class Item extends Component {
 
    setDelItem = (data, i, c, t) => {
       this.props.file.checked = !this.props.file.checked;
-      this.props._setDelItem(this.replaceSpace(data), i, !c, t);
-   }
-
-   replaceSpace(str) {
-      return str.replace( /\s/g, "%20" );
+      this.props._setDelItem(ReplaceSpace(data), i, !c, t);
    }
 
    handleClickItem = (e, name) => {

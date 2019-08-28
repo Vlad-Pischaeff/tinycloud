@@ -6,8 +6,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-var $ = require('jquery');
-
 export default class ModalRemoveItem extends React.Component {
 
    handleCloseOK = () => {
@@ -23,9 +21,9 @@ export default class ModalRemoveItem extends React.Component {
       return (
 
          <Dialog open={this.props.openWindow}
-                  onClose={this.props.closeWindow}
-                  onKeyPress={this.handleKeyPress}
-                  aria-labelledby="form-dialog-title">
+                 onClose={this.props.closeWindow}
+                 onKeyPress={this.handleKeyPress}
+                 aria-labelledby="form-dialog-title">
 
             <DialogTitle id="form-dialog-title">Are you shure to remove this tiems?</DialogTitle>
 

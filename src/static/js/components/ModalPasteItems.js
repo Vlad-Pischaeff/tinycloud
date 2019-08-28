@@ -11,17 +11,17 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import CloseIcon from '@material-ui/icons/Close';
 import ItemName from './ItemName';
-
-var $ = require('jquery');
+import { FetchRaw } from './functions.js';
 
 export default class ModalPasteItems extends React.Component {
 
    handlePaste = (name, path, action) => {
-      $.get(window.location.href + 'paste', 
-         { "name": name,
-           "path": path,
-           "act" : action, },
-         (data) => this.props.listContent(data));
+      FetchRaw('paste', { "name": name, "path": path, "act" : action, }, this.props.listContent);
+      //$.get(window.location.href + 'paste', 
+      //   { "name": name,
+      //     "path": path,
+      //     "act" : action, },
+      //   (data) => this.props.listContent(data));
       this.props.removeItemFromContent(name);
    };
 
@@ -61,7 +61,7 @@ export default class ModalPasteItems extends React.Component {
                <Button onClick={this.props.clearContent} color="primary">
                   Clear
                </Button>
-               </DialogActions>
+            </DialogActions>
 
          </Dialog>
       );

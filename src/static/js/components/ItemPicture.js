@@ -19,10 +19,6 @@ const styles = theme => ({
 
 class ItemPicture extends Component {
 
-/*   replaceSpace(str) {
-      return str.replace( /\s/g, "%20" );
-   }*/
-
    render() {
    const {classes, file, showButtons, width, handleShowPicture, showThumbnail, hideThumbnail} = this.props;
 
@@ -36,8 +32,8 @@ class ItemPicture extends Component {
                     onMouseOut={() => hideThumbnail()} />
             </Grid>
             <Grid item style={{ width:"85%" }}>
-            <ListItemText primary={<ItemName name={file.name} fontWeight={showButtons ? 'normal' : 'bold'} />} 
-                          secondary={file.date + "   Size: " + file.size} style={{width:"100%"}} />
+               <ListItemText primary={<ItemName name={file.name} fontWeight={showButtons ? 'normal' : 'bold'} />} 
+                             secondary={file.date + "   Size: " + file.size} style={{width:"100%"}} />
             </Grid>
          </Grid>
 

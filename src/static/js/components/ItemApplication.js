@@ -19,10 +19,6 @@ const styles = theme => ({
 
 class ItemApplication extends Component {
 
-/*   replaceSpace(str) {
-      return str.replace( /\s/g, "%20" );
-   }*/
-
    render() {
    const {classes, file, showButtons, width, handleClickItem} = this.props;
 

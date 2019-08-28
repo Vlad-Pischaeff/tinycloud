@@ -6,8 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
-var $ = require('jquery');
+import { FetchRaw } from './functions.js';
 
 export default class ModalCreateDir extends React.Component {
 
@@ -22,9 +21,7 @@ export default class ModalCreateDir extends React.Component {
 
    handleCloseOK = () => {
       this.props.closeWindow();
-      $.get(window.location.href + 'mkdir', 
-         { "dir": this.state.name },
-         (data) => this.props.callbackMkDir(data));
+      FetchRaw('mkdir', { "dir": this.state.name }, this.props.callbackMkDir);
       this.setState({ name: "" });
    };
 

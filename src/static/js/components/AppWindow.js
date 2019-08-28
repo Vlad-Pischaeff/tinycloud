@@ -23,8 +23,7 @@ import CloudDownload from '@material-ui/icons/CloudDownload';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-
-var $ = require('jquery');
+import { FetchData, FetchSimple, PlaceSpace } from './functions.js';
 
 const BUFFER = 4 * 1024 * 1024;
 
@@ -90,13 +89,13 @@ class AppWindow extends Component {
       this.getHomeList();
    }
 
-   replaceSpace(str) {
-      return str.replace( /\s/g, "%20" );
-   }
+//   replaceSpace(str) {
+//      return str.replace( /\s/g, "%20" );
+//   }
 
-   placeSpace(str) {
-      return str.replace( /%20/g, " " );
-   }
+//   placeSpace(str) {
+//      return str.replace( /%20/g, " " );
+//   }
 
    setItems = (data, path) => {
       this.setState({ items: data });
@@ -104,33 +103,32 @@ class AppWindow extends Component {
    }
 
    getDirList = () => {
-      $.get(window.location.href + 'ls',
-         (data) => this.setState({ items: data }) );
+      FetchSimple('ls', (n) => this.setState({ items: n}));
+      //$.get(window.location.href + 'ls',
+      //   (data) => this.setState({ items: data }) );
    }
 
    setDirList = (data, item) => {
       if (typeof item !== "undefined") {
          var obj = this.state.dirPath.slice();
          obj.push(item);
-         this.setState({ dirPath: obj }, () => console.log("dir path0 --", this.state.dirPath));
+         this.setState({ dirPath: obj }, () => console.log("dir path new --", this.state.dirPath));
       }
       this.setState({ items: data });
       this.setState({ dirChecked: {}, filesChecked: {}});
    }
 
    getHomeList = () => {
-      $.get(window.location.href + 'home',
-         (data) => this.setState({ items: data }) );
+      FetchSimple('home', (n) => this.setState({ items: n}));
       this.setState({ dirChecked: {}, filesChecked: {} });
       this.setState({ dirPath: [] }, () => console.log("dir path home --", this.state.dirPath));
    }
 
    getBackList = () => {
-      $.get(window.location.href + 'back',
-         (data) => this.setState({ items: data }) );
+      FetchSimple('back', (n) => this.setState({ items: n}));
       var obj = this.state.dirPath.slice(0,-1);
       this.setState({ dirChecked: {}, filesChecked: {} });
-      this.setState({ dirPath: obj }, () => console.log("dir path1 --", this.state.dirPath));
+      this.setState({ dirPath: obj }, () => console.log("dir path back --", this.state.dirPath));
    }
 
    isNotEmpty(obj) {
@@ -150,9 +148,7 @@ class AppWindow extends Component {
       if (this.isNotEmpty(this.state.filesChecked)) {
          var obj = this.state.filesChecked;
          for (var key in obj) {
-            $.get(window.location.href + 'rmfile',
-               { "file": obj[key] },
-               (data) => this.setState({ items: data }) );
+            FetchData('rmfile', obj[key], '', (n) => this.setState({ items: n}));
             console.log("---files deleted---", obj[key]);
          }
          this.setState({ filesChecked: {} });
@@ -160,9 +156,7 @@ class AppWindow extends Component {
       if (this.isNotEmpty(this.state.dirChecked)) {
          var obj = this.state.dirChecked;
          for (var key in obj) {
-            $.get(window.location.href + 'rmdir',
-               { "dir": obj[key] },
-               (data) => this.setState({ items: data }) );
+            FetchData('rmdir', obj[key], '', (n) => this.setState({ items: n}));
             console.log("---dirs deleted---", obj[key]);
          }
          this.setState({ dirChecked: {} });
@@ -174,12 +168,10 @@ class AppWindow extends Component {
          var obj = this.state.dirChecked;
          (c) ? obj[i] = data : delete obj[i];
          this.setState({ dirChecked: obj });
-//       console.log("dir=", this.state.dirChecked, obj, c, t, i);
       } else {
          var obj = this.state.filesChecked;
          (c) ? obj[i] = data : delete obj[i];
          this.setState({ filesChecked: obj });
-//       console.log("file=", this.state.filesChecked, obj, c, t, i);
       }
    }
 
@@ -211,13 +203,11 @@ class AppWindow extends Component {
    openModalShowPicture = (name) => {
       this.setState({ OpenModalShowPicture: true });
       this.setState({ filePicture: name });
-//    console.log("show pic--", this.state.OpenModalShowPicture);
    }
 
    closeModalShowPicture = () => {
       this.setState({ OpenModalShowPicture: false });
       this.setState({ filePicture: '' });
-//    console.log("close pic--", this.state.OpenModalShowPicture);
    }
 
    escapeUnicode(str) {
@@ -279,14 +269,22 @@ class AppWindow extends Component {
             this.setState({OpenModalUploadFiles: false});
             this.getDirList();
          }*/
-         $.get(window.location.href + 'ls',
+         FetchSimple('ls', (n) => { this.setState({ items: n }),
+                                         () => { cnk[filename] = 0;
+                                                 this.setState({ uploadChunkNumber: cnk }, 
+                                                      () => this.getPost(file));
+                                               }
+                                  }
+         );
+
+         /*$.get(window.location.href + 'ls',
             (data) => {
                this.setState({ items: data },
                   () => {
                      cnk[filename] = 0;
                      this.setState({ uploadChunkNumber: cnk }, () => (this.getPost(file)));
                   });
-            });
+            });*/
       };
 
       xhr.onload = (e) => {
@@ -363,7 +361,7 @@ class AppWindow extends Component {
             let blob = xhr.response;
             //reset checkbox in item = obj[key]
             for (let i in this.state.items) {
-               if (this.state.items[i].name == this.placeSpace(obj[key])) this.state.items[i].checked = false;
+               if (this.state.items[i].name == PlaceSpace(obj[key])) this.state.items[i].checked = false;
             }
             //remove item from list of checked files
             delete obj[key];
@@ -393,8 +391,9 @@ class AppWindow extends Component {
          obj['name'] = name;
          obj['type'] = type;
          obj['action'] = act;
-         $.get(window.location.href + 'pwd',
-            (data) => { obj['path'] = data; } );
+         FetchSimple('pwd', (n) => obj['path'] = n[0]['dir']);
+         //$.get(window.location.href + 'pwd',
+         //   (data) => { obj['path'] = data; } );
          mass.push(obj);
          this.setState({ itemsForCopyOrMove: mass });
          console.log("itemsForCopyOrMove--", this.state.itemsForCopyOrMove );

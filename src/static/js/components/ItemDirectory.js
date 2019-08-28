@@ -4,6 +4,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import ItemName from './ItemName';
+import { ReplaceSpace } from './functions.js';
 
 const styles = theme => ({
    image48: {
@@ -19,17 +20,13 @@ const styles = theme => ({
 
 class ItemDirectory extends Component {
 
-   replaceSpace(str) {
-      return str.replace( /\s/g, "%20" );
-   }
-
    render() {
    const {classes, file, showButtons, width, openDir } = this.props;
 
       return (
 
          <Grid container direction="row" style={{ width: width }} id="myDir" 
-               onClick={() => openDir(this.replaceSpace(file.name))} className={classes.item} >
+               onClick={() => openDir(ReplaceSpace(file.name))} className={classes.item} >
             <Grid item style={{ width:"15%",display:"flex" }}>
                <img src={require('../img/Folder-blue.svg')} className={classes.image48} />
             </Grid>

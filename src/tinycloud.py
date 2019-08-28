@@ -110,8 +110,13 @@ def cdrand():
 
 @app.route("/pwd", methods=["GET", "POST"])
 def pwd():
+    m = []
+    d = {}
     dir = load_dir()
-    return dir
+    d = { "dir": dir }
+    m.append(d)
+    #print("pwd - %s " % jsonify(m))
+    return jsonify(m)
 
 @app.route("/home", methods=["GET", "POST"])
 def home():
@@ -136,13 +141,13 @@ def back():
 def mkdir():
     dir = load_dir()
     os.chdir(replacer(dir))
-    os.mkdir(request.args['dir'])
+    os.mkdir(request.json['dir'])
     return ls()
 
 @app.route("/rmdir", methods=["GET", "POST"])
 def rmdir():
     dir = replacer(load_dir())
-    curr_dir1 = dir  + '/' + replacer(request.args['dir'])
+    curr_dir1 = dir + '/' + replacer(request.json['dir'])
     for root, dirs, files in os.walk(curr_dir1, topdown=False):
       for name in files:
         os.remove(os.path.join(root, name))
@@ -154,7 +159,7 @@ def rmdir():
 @app.route("/rmfile", methods=["GET", "POST"])
 def rmfile():
     dir = replacer(load_dir())
-    filename = replacer(request.args['file'])
+    filename = replacer(request.json['dir'])
     try:
       os.chdir(replacer(dir))
       os.remove(filename)
@@ -205,8 +210,8 @@ def fileUpload():
 @app.route("/rename", methods=["GET", "POST"])
 def rename():
     dir = replacer(load_dir())
-    newfile = "/".join([dir, request.args['newname']])
-    oldfile = "/".join([dir, request.args['oldname']])
+    newfile = "/".join([dir, request.json['newname']])
+    oldfile = "/".join([dir, request.json['oldname']])
     if newfile:
        os.rename(oldfile, newfile)
     return lsDir(dir)
@@ -214,9 +219,9 @@ def rename():
 @app.route("/paste", methods=["GET", "POST"])
 def paste():
     dir = replacer(load_dir())
-    filename = request.args['name']
-    filepath = replacer(request.args['path'])
-    fileact = request.args['act']
+    filename = request.json['name']
+    filepath = replacer(request.json['path'])
+    fileact = request.json['act']
     source = "/".join([filepath, filename])
     dst = "/".join([dir, filename])
     tmp = source + ".tmp"

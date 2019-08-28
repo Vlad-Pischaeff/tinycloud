@@ -6,8 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
-var $ = require('jquery');
+import { FetchRaw } from './functions.js';
 
 export default class ModalRenameFile extends React.Component {
 
@@ -22,10 +21,13 @@ export default class ModalRenameFile extends React.Component {
 
    handleCloseOK = () => {
       this.props.closeWindow();
-      $.get(window.location.href + 'rename', 
-         { "newname": this.state.name,
-           "oldname": this.props.filename },
-         (data) => this.props.___setDirList(data));
+      let newname = this.state.name;
+      let oldname = this.props.filename;
+      FetchRaw('rename', { "newname": newname, "oldname": oldname }, this.props.___setDirList);
+      //$.get(window.location.href + 'rename', 
+      //   { "newname": this.state.name,
+      //     "oldname": this.props.filename },
+      //   (data) => this.props.___setDirList(data));
       this.setState({ name: "" });
    };
 
