@@ -89,14 +89,6 @@ class AppWindow extends Component {
       this.getHomeList();
    }
 
-//   replaceSpace(str) {
-//      return str.replace( /\s/g, "%20" );
-//   }
-
-//   placeSpace(str) {
-//      return str.replace( /%20/g, " " );
-//   }
-
    setItems = (data, path) => {
       this.setState({ items: data });
       this.setState({ dirPath: path });
@@ -216,6 +208,17 @@ class AppWindow extends Component {
       });
    }
 
+/*   resumeUploadFile = (n, file) => {
+      this.setState({ items: n }, (file) => this.resetChunkNumber(file));
+   }
+
+   resetChunkNumber = (file) => {
+      let filename = file['name'];
+      let cnk = this.state.uploadChunkNumber;
+      cnk[filename] = 0;
+      this.setState({ uploadChunkNumber: cnk }, () => this.getPost(file));
+   }*/
+
    uploadFile = (file) => {
       this.setState({ OpenModalUploadFiles: !this.state.OpenModalUploadFiles });
       for (var i = 0; i < file.files.length; i++) {
@@ -261,30 +264,12 @@ class AppWindow extends Component {
       xhr.timeout = 20000;
 
       xhr.ontimeout = (e) => {
-         /*alert(file['name'] + ' upload failed');
-         delete this.state.uploadState[filename];
-         delete this.state.uploadChunkNumber[filename];
-         if (!this.isNotEmpty(this.state.uploadState)) {
-            console.log('Timeout--', this.state.uploadState, this.state.uploadChunkNumber[filename]);
-            this.setState({OpenModalUploadFiles: false});
-            this.getDirList();
-         }*/
-         FetchSimple('ls', (n) => { this.setState({ items: n }),
-                                         () => { cnk[filename] = 0;
-                                                 this.setState({ uploadChunkNumber: cnk }, 
-                                                      () => this.getPost(file));
-                                               }
-                                  }
-         );
 
-         /*$.get(window.location.href + 'ls',
-            (data) => {
-               this.setState({ items: data },
-                  () => {
-                     cnk[filename] = 0;
-                     this.setState({ uploadChunkNumber: cnk }, () => (this.getPost(file)));
-                  });
-            });*/
+               FetchSimple('ls', (n) => { this.setState({ items: n }, () => { cnk[filename] = 0;
+                                                                              this.setState({ uploadChunkNumber: cnk }, () => this.getPost(file));
+                                               });
+                                  });
+
       };
 
       xhr.onload = (e) => {
@@ -293,8 +278,12 @@ class AppWindow extends Component {
                //if (!this.isNotEmpty(this.state.uploadState))
                console.log("OnLoad --", xhr.response['filename'], xhr.response['chunk']);
                //status = true;
-         } else {
+            } else {
                console.log('OnLoadError--', xhr.statusText);
+               FetchSimple('ls', (n) => { this.setState({ items: n }, () => { cnk[filename] = 0;
+                                                                              this.setState({ uploadChunkNumber: cnk }, () => this.getPost(file));
+                                               });
+                                  });
             }
          }
       console.log('Load--', xhr.statusText);
@@ -312,7 +301,7 @@ class AppWindow extends Component {
          } else {
             if (xhr.response['filename'] == filename) {
                cnk[filename] = +xhr.response['chunk'] + 1;
-               this.setState({ uploadChunkNumber: cnk }, () => (this.getPost(file)));
+               this.setState({ uploadChunkNumber: cnk }, () => this.getPost(file));
             }
          }
       }
@@ -361,7 +350,8 @@ class AppWindow extends Component {
             let blob = xhr.response;
             //reset checkbox in item = obj[key]
             for (let i in this.state.items) {
-               if (this.state.items[i].name == PlaceSpace(obj[key])) this.state.items[i].checked = false;
+               if (this.state.items[i].name == PlaceSpace(obj[key]))
+                   this.state.items[i].checked = false;
             }
             //remove item from list of checked files
             delete obj[key];
@@ -375,7 +365,7 @@ class AppWindow extends Component {
             a.href = url;
             a.download = fileName;
             a.click();
-            setTimeout(() => {window.URL.revokeObjectURL(url);}, 100);
+            setTimeout(() => window.URL.revokeObjectURL(url), 100);
 //          For Firefox it is necessary to delay revoking the ObjectURL
 //          download(blob, fileName, "application/octet-stream" );
          };
@@ -404,7 +394,6 @@ class AppWindow extends Component {
       let mass = this.state.itemsForCopyOrMove;
       var new_mass = mass.filter((element) => element['name'] != name);
       this.setState({ itemsForCopyOrMove: new_mass });
-//		console.log("itemsForCopyOrMove--", this.state.itemsForCopyOrMove);
    }
 
    showThumbnail = (name) => {
@@ -512,11 +501,11 @@ class AppWindow extends Component {
          </Grid>
       </Grid>
 
-         <ModalCreateDir openWindow={this.state.OpenModalCreateDir}
+         <ModalCreateDir   openWindow={this.state.OpenModalCreateDir}
                            closeWindow={this.closeModalCreateDir}
                            callbackMkDir={this.setDirList}	/>
 
-         <ModalRemoveItem openWindow={this.state.OpenModalRemoveItem}
+         <ModalRemoveItem  openWindow={this.state.OpenModalRemoveItem}
                            closeWindow={this.closeModalRemoveItem}
                            callbackRemoveItem={this.rmDir} />
 

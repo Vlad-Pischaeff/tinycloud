@@ -25,7 +25,6 @@ with open(conf_file, 'r') as f:
 directory = data["directory"]
 HOME_DIR = directory
 os.chdir(directory)
-
 f.close()
 
 data = { "curr_dir": directory }
@@ -115,7 +114,6 @@ def pwd():
     dir = load_dir()
     d = { "dir": dir }
     m.append(d)
-    #print("pwd - %s " % jsonify(m))
     return jsonify(m)
 
 @app.route("/home", methods=["GET", "POST"])
@@ -172,8 +170,9 @@ def rmfile():
 def fileDownload():
     #For windows you need to use drive name [ex: F:/Example.pdf]
     source = replacer(load_dir())
+    #source=os.getcwd()
     data = request.data.decode('utf8')
-    print("data-- %s" % data)
+    print("data-- %s" % request.data)
     data2 = json.loads(data)
     #data = request.form.to_dict()
     print("request-- %s" % data2['item'])
@@ -243,18 +242,18 @@ def preview(filename):
 
 @app.route('/show/<filename>')
 def show(filename):
-    basewidth = 100
+    basewidth = 120
     dir = replacer(load_dir())
-    if (filename[:3] =='jpg' or filename[:4] =='jpeg'):
-      img = Image.open(filename)
+    src = "/".join([dir, filename])
+    if (filename[-3:] =='jpg' or filename[-4:] =='jpeg'):
+      img = Image.open(src)
       wpercent = (basewidth/float(img.size[0]))
       hsize = int((float(img.size[1])*float(wpercent)))
-      img.resize((basewidth,hsize), Image.ANTIALIAS)
+      img.thumbnail((basewidth,hsize), Image.ANTIALIAS)
       tmp = io.BytesIO()
       img.save(tmp, format='JPEG')
       return Response(tmp.getvalue(), mimetype='image/jpeg')   
     return send_from_directory(dir, filename)
-    
+
 if __name__ == "__main__":
     app.run(debug=True)
-
