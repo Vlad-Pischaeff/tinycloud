@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import AppLogo from './AppLogo';
-import MenuGlobal from './MenuGlobal';
+//import AppLogo from './AppLogo';
+//import MenuGlobal from './MenuGlobal';
 import AppWindow from './AppWindow';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';

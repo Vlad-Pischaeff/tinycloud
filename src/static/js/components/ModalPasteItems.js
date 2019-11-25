@@ -44,7 +44,7 @@ export default class ModalPasteItems extends React.Component {
    );
 
       return (
-         <Dialog open={this.props.openWindow} onClose={this.props.closeWindow}	aria-labelledby="form-dialog">
+         <Dialog open={this.props.openWindow} onClose={this.props.closeWindow} aria-labelledby="form-dialog">
 
             <DialogTitle id="form-dialog-title">Paste listed items&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                <IconButton aria-label="Close" style={{ position: 'absolute', right: "4px", top: "4px" }} 

@@ -32,7 +32,7 @@ class ItemApplication extends Component {
             </Grid>
             <Grid item style={{ width:"85%" }}>
                <ListItemText primary={<ItemName name={file.name} fontWeight={showButtons ? 'normal' : 'bold'} />} 
-                             secondary={file.date + "   Size: " + file.size} style={{width:"100%"}} />
+                             secondary={file.date + "   Size: " + file.size} style={{ width:"100%" }} />
             </Grid>
          </Grid>
 

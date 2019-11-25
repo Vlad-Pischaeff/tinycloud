@@ -208,8 +208,21 @@ class AppWindow extends Component {
       });
    }
 
-/*   resumeUploadFile = (n, file) => {
-      this.setState({ items: n }, (file) => this.resetChunkNumber(file));
+//Update item in dstArr from another one in srcArr
+   updArrItem(srcArr, dstArr, item) {
+      let i = dstArr.findIndex(n => (n.type =='file' && n.name === item));
+      let e = srcArr.find(n => (n.type =='file' && n.name === item));
+      (i === -1 ) ? dstArr.push(e) : dstArr[i] = e;
+      console.log('update Array--', i, 'item--', item, 'dstArr--', dstArr, 'e--', e);
+      return dstArr;
+   }
+
+   resumeUploadFile = (n, file) => {
+      let dstArr = [...this.state.items];
+      let filename = file['name'];
+      let updArr = this.updArrItem(n, dstArr, filename);
+      console.log('resume file--', 'n--', n, filename, 'dstArr--', dstArr, 'updArr--', updArr);
+      this.setState({ items: updArr }, () => this.resetChunkNumber(file));
    }
 
    resetChunkNumber = (file) => {
@@ -217,33 +230,34 @@ class AppWindow extends Component {
       let cnk = this.state.uploadChunkNumber;
       cnk[filename] = 0;
       this.setState({ uploadChunkNumber: cnk }, () => this.getPost(file));
-   }*/
+      //console.log('reset chunk--', cnk, this.state.uploadChunkNumber, filename, this.state.items);
+   }
 
+//Open modal window and start files downloading
    uploadFile = (file) => {
       this.setState({ OpenModalUploadFiles: !this.state.OpenModalUploadFiles });
-      for (var i = 0; i < file.files.length; i++) {
-         this.getPost(file.files[i]);
-      }
+      [...file.files].forEach(n => this.getPost(n));
    }
 
    getPost = (file) => {
       let filename = file['name'];
       let element = this.state.items.filter(n => (n.type =='file' && n.name == filename)) || [];
-      let START = 0;
-      if (element.length != 0 ) START = +element[0].rawsize;
-      console.log('START--', START, element.length, element, this.state.items);
+      /*let START = 0;
+      if (element.length != 0 ) START = +element[0].rawsize;*/
+      let START = (element.length != 0 ) ? +element[0].rawsize : 0;
+      console.log('START--', START, 'START element--', element[0]);
       let chunk = null;
-      let last_chunk = false;
+      /*let last_chunk = false;*/
       let i = this.state.uploadChunkNumber[filename] || 0;
       let start = (i * BUFFER) + START;
       let end = ((i + 1) * BUFFER) + START;
-
+      let last_chunk = (end > file['size']) ? true : false;
       chunk = file.slice(start, end);
-      if (end > file['size']) {
+      /*if (end > file['size']) {
          last_chunk = true;
-      }
+      }*/
 
-      console.log('i--', i, START, start,  end, file['size'], last_chunk, this.state.uploadChunkNumber[filename]);
+      console.log('i--', i, START, start, end, filename, file['size'], last_chunk);
       this.getPostXHR(file, chunk, i, last_chunk, START);
    }
 
@@ -251,7 +265,7 @@ class AppWindow extends Component {
       let filename = file['name'];
       let obj = this.state.uploadState;
       let cnk = this.state.uploadChunkNumber;
-      console.log('Chunk--', this.state.uploadChunkNumber[filename]);
+      //console.log('Chunk--', this.state.uploadChunkNumber[filename]);
       let xhr = new XMLHttpRequest();
 
       xhr.open("POST", "/upload", true);
@@ -263,34 +277,27 @@ class AppWindow extends Component {
       xhr.responseType = "json";
       xhr.timeout = 20000;
 
-      xhr.ontimeout = (e) => {
-
-               FetchSimple('ls', (n) => { this.setState({ items: n }, () => { cnk[filename] = 0;
-                                                                              this.setState({ uploadChunkNumber: cnk }, () => this.getPost(file));
-                                               });
-                                  });
-
-      };
+      /*xhr.ontimeout = (e) => {
+               FetchSimple('ls', (n) => { this.setState({ items: n }, () => { 
+                                                                              cnk[filename] = 0;
+                                                                              this.setState({ uploadChunkNumber: cnk }, this.getPost(file));
+                                                                            });
+                                        });
+      };*/
+      xhr.ontimeout = (e) => { FetchSimple('ls', (n) => this.resumeUploadFile(n, file)) };
 
       xhr.onload = (e) => {
          if (xhr.readyState === 4) {
             if (xhr.status === 200) {
                //if (!this.isNotEmpty(this.state.uploadState))
-               console.log("OnLoad --", xhr.response['filename'], xhr.response['chunk']);
-               //status = true;
+               console.log("OnLoad OK--", xhr.response['filename'], xhr.response['chunk']);
             } else {
-               console.log('OnLoadError--', xhr.statusText);
-               FetchSimple('ls', (n) => { this.setState({ items: n }, () => { cnk[filename] = 0;
-                                                                              this.setState({ uploadChunkNumber: cnk }, () => this.getPost(file));
-                                               });
-                                  });
+               FetchSimple('ls', (n) => this.resumeUploadFile(n, file));
             }
          }
-      console.log('Load--', xhr.statusText);
       };
 
       xhr.onloadend = (e) => {
-         console.log('OnLoaded--', xhr.statusText, last_chunk, xhr.response['filename'], xhr.response['chunk'], this.state.uploadState);
          if ((xhr.statusText == 'OK') && ( last_chunk == true )) {
             delete this.state.uploadState[filename];
             delete this.state.uploadChunkNumber[filename];
@@ -321,7 +328,7 @@ class AppWindow extends Component {
       }
 
       xhr.send(chunk);
-}
+   }
 
    chkFormData = (data) => {
       for (var [key, value] of data.entries()) {

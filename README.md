@@ -46,4 +46,4 @@ At present it is possible to:
 
 <h3>Linux.</h3>
 
-It is too complicated way to run tinycloud. I described it later.
+You can use uwsgi, gunicorn, mod_wsgi and so on. No sence.
